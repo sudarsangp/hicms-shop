@@ -1,0 +1,2 @@
+CSRF_ENABLED = True
+SECRET_KEY = 'cg3002-g10-hicms'
