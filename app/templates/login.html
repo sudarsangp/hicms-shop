@@ -1,0 +1,12 @@
+{% extends "base layout.html" %}
+
+{% block content %}
+<form action="" method="post" name="login">
+	<p> Enter your user id
+		{{form.userid(size=30)}}<br>
+		Enter your password
+		{{form.password(size=30)}}<br>
+	</p>
+
+</form>
+{% endblock %}
