@@ -1,0 +1,18 @@
+{% extends "base layout.html" %}
+
+{% block content %}
+<form action="" method="post" name="registershop">
+	<p> Enter Name of Shop
+		{{form.shopname()}}<br>
+		Enter Shop Location
+		{{form.location}}<br>
+		Enter Shop ID
+		{{form.shopid}}<br>
+		Enter password
+		{{form.password()}}<br>
+		Confirm password
+		{{form.password()}}<br>
+		<p><input type="submit" value="Regsiter">
+	</p>
+</form>
+{% endblock %}

@@ -1,7 +1,7 @@
 from flask import render_template, flash
 from flask.ext.login import login_required
 from app import app, login_manager, forms
-from forms import LoginForm
+from forms import LoginForm, RegisterShopForm
 from models import Check
 
 @app.route('/check')
@@ -21,6 +21,11 @@ def login():
 	#	flash("Logged in Success")
 	#	return redirect(request.args.get("next") or url_for("index"))
 	return render_template('login.html',form = form)
+
+@app.route('/register')
+def register():
+	form = RegisterShopForm();
+	return render_template('registershop.html',form = form)
 
 # to check whether this page is accesible 
 @app.route("/settings")
