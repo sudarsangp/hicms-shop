@@ -7,6 +7,7 @@ class LoginForm(Form):
 	password = PasswordField('password',[validators.Required()])
 	remember_me = BooleanField('remember_me', default = False)
 
+# TODO: Remove this class from here
 class RegisterShopForm(Form):
 	shopname = TextField('shopname', validators = [validators.Required()])
 	location = TextField('location', validators = [validators.Required()])
