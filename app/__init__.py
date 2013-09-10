@@ -9,4 +9,4 @@ db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
 
-from app import view, models
+from app import view, model, form, controller

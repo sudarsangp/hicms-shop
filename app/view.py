@@ -1,8 +1,8 @@
 from flask import render_template, flash, request, session, redirect, url_for
 from flask.ext.login import login_required
-from app import app, login_manager, forms
-from forms import LoginForm, RegisterShopForm, SignupForm, SigninForm
-from models import Check, User, db
+from app import app, login_manager
+from form.forms import LoginForm, RegisterShopForm, SignupForm, SigninForm
+from model.models import Check, User, db
 
 @app.route('/check')
 def default():
