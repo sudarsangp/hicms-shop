@@ -1,0 +1,17 @@
+{% extends "baselayout.html" %}
+{% block content %}
+
+<form action="" method = "post" >
+
+	<p> Operations </p>
+	{% for subfield in form.operations %}
+    <tr>
+        <td>{{ subfield }}</td>
+        <td>{{ subfield.label }}</td>
+    </tr>
+	{% endfor %}
+	<br>
+	<input type = "submit" value="Submit"></p>
+</form>
+
+{% endblock %}

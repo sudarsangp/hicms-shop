@@ -1,7 +1,7 @@
 from flask import render_template, flash, request, session, redirect, url_for
 from flask.ext.login import login_required
 from app import app, login_manager
-from form.forms import LoginForm, RegisterShopForm, SignupForm, SigninForm
+from form.forms import LoginForm, RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction
 from model.models import Check, User, db
 from controller.Logic import Logic
 
@@ -12,16 +12,6 @@ def default():
 #@login_manager.user_loader
 #def load_user(userid):
 #	return User.get(userid)
-
-@app.route('/')
-@app.route('/login', methods=['GET','POST'])
-def login():
-	form = LoginForm()
-	#if form.validate_on_submit():
-	#	login_user(user)
-	#	flash("Logged in Success")
-	#	return redirect(request.args.get("next") or url_for("index"))
-	return render_template('login.html',form = form)
 
 @app.route('/register')
 def register():
@@ -49,6 +39,7 @@ def signup():
   elif request.method == 'GET':
   	return render_template('signup.html', form=form)
 
+@app.route('/')
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
   form = SigninForm()
@@ -61,7 +52,7 @@ def signin():
       return render_template('signin.html', form=form)
     else:
       session['email'] = form.email.data
-      return redirect(url_for('profile'))
+      return redirect(url_for('product_functions'))
                  
   elif request.method == 'GET':
     return render_template('signin.html', form=form) 
@@ -73,7 +64,7 @@ def signout():
     return redirect(url_for('signin'))
      
   session.pop('email', None)
-  return redirect(url_for('login'))
+  return redirect(url_for('signin'))
 
 @app.route('/profile')
 def profile():
@@ -94,6 +85,26 @@ def profile():
 @login_required
 def settings():
     return "Welcome"
+
+#for manually adding product to the database or shop
+@app.route('/product', methods = ['POST', 'GET'])
+#@login_required
+def product_functions():
+  form = ShopAdminFunction();
+  if request.method ==  "POST":
+    
+    operation = form.operations.data
+    #add the logic object here.
+    return operation + "  yes"
+    
+  else:
+    redirect(url_for('defaulterror'))
+ 
+  return render_template('SAproduct_operation.html',form=form)
+
+@app.route('/defaulterror')
+def defaulterror():
+  return "Error found"
 
 #to check the database part works fine
 @app.route('/db')

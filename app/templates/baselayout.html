@@ -10,6 +10,7 @@
       <div class="container">
         <h1 class="logo"><center> HICMS </center></h1>
           {% if 'email' in session %}
+          <li><a href="{{ url_for('product_functions') }}">Operations</a></li>
           <li><a href="{{ url_for('profile') }}">Profile</a></li>
           <li><a href="{{ url_for('signout') }}">Sign Out</a></li>
           {% else %}
