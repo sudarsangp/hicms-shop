@@ -93,12 +93,12 @@ def product_functions():
   form = ShopAdminFunction();
   if request.method ==  "POST":
     
-    operation = form.operations.data
-    #add the logic object here.
-    return operation + "  yes"
+     operation = form.operations.data
+     logicObject = Logic()
+     logicObject.execute(operation)
     
   else:
-    redirect(url_for('defaulterror'))
+    redirect(url_for('defaulterror')) 
  
   return render_template('SAproduct_operation.html',form=form)
 

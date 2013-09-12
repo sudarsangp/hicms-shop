@@ -10,5 +10,6 @@ from CommandFactory import CommandFactory
 class Logic(object):
     
     def execute(self,formData): 
-         newCommand = CommandFactory()
-         newCommand.createCommand(formData)
+         newCommandFactory = CommandFactory()  
+         newCommand = newCommandFactory.createCommand(formData)
+         newCommand.execute(formData) 

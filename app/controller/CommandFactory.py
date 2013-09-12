@@ -9,10 +9,13 @@ Created on Sep 10, 2013
      returns the correct type to the caller.
      
 '''
-
+from CustomerOperations import AddCustomer
 class CommandFactory(object):
     
     def createCommand(self,formData):
-        print formData
+        if formData == "addcustomer":
+            addCustomerCommand = AddCustomer()
+            return addCustomerCommand
+        
         
     

@@ -14,7 +14,7 @@ class Command(object):
     __metaclass__ = ABCMeta
     
     @abstractmethod
-    def execute(self):
+    def execute(self,formData):
         pass
     
     
