@@ -1,0 +1,21 @@
+{% extends "baselayout.html" %}
+ 
+{% block content %}
+
+<form action = "" method = post>
+	Enter Customer Name
+	{{ form.customername }} <br>
+	Enter Customer Address
+	{{ form.customeraddress }} <br>
+	Enter Customer Hp
+	{{ form.handphone }} <br>
+	Enter Customer Email Id
+	{{ form.emailid }} <br>
+	Enter Date of Joining
+	{{ form.dateofjoining }} <br>
+	Enter Password 
+	{{ form.passwordcustomer }}
+	<br>
+	<input type="submit" value="Add Customer">
+</form>
+{% endblock %}

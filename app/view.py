@@ -1,8 +1,8 @@
 from flask import render_template, flash, request, session, redirect, url_for
 from flask.ext.login import login_required
 from app import app, login_manager
-from form.forms import LoginForm, RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction
-from model.models import Check, User, db
+from form.forms import LoginForm, RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer
+from model.models import Check, User, db, Customer
 
 @app.route('/check')
 def default():
@@ -94,12 +94,26 @@ def product_functions():
     
     operation = form.operations.data
     #add the logic object here.
-    return operation + "  yes"
-    
+    if operation == "addcustomer":
+      return redirect(url_for('addcustomer',operation=operation))          
   else:
     redirect(url_for('defaulterror'))
  
   return render_template('SAproduct_operation.html',form=form)
+
+@app.route('/addcustomer/<operation>', methods = ['POST', 'GET'])
+#@login_required
+def addcustomer(operation):
+ 
+  form = AddCustomer()
+  if request.method ==  "POST":
+    # the operation here refers to string that has to be used for checking 
+    # in the logic object
+    return operation
+   
+  return render_template('addcustomer.html', form = form)
+    
+ 
 
 @app.route('/defaulterror')
 def defaulterror():
@@ -110,3 +124,5 @@ def defaulterror():
 def db_check():
 	checkdb = Check()
 	return checkdb.check_id()
+
+  
