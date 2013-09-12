@@ -3,6 +3,7 @@ from flask.ext.login import login_required
 from app import app, login_manager
 from form.forms import LoginForm, RegisterShopForm, SignupForm, SigninForm
 from model.models import Check, User, db
+from controller.Logic import Logic
 
 @app.route('/check')
 def default():
@@ -51,7 +52,7 @@ def signup():
 @app.route('/signin', methods=['GET', 'POST'])
 def signin():
   form = SigninForm()
-
+  
   if 'email' in session:
     return redirect(url_for('profile'))  
 
