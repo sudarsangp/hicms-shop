@@ -2,7 +2,7 @@ from app import db
 from werkzeug import generate_password_hash, check_password_hash
 
 class Customer(db.Model):
-  __tablename__ = "Customer"
+  __tablename__ = "customer"
   name = db.Column(db.String(256))
   address = db.Column(db.String(256))
   hp = db.Column(db.Integer)

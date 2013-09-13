@@ -15,5 +15,5 @@ class StorageClass(object):
                                    formData.handphone.data,formData.emailid.data,formData.dateofjoining.data,
                                    formData.passwordcustomer.data)
     
-        db.session().add(newCustomerData)
-        db.session().commit()
+        db.session.add(newCustomerData)
+        db.session.commit()

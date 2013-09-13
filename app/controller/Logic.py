@@ -9,7 +9,10 @@ from CommandFactory import CommandFactory
 
 class Logic(object): 
     
+    def __init__(self):
+        self.newCommandFactory = CommandFactory()
+
+     
     def execute(self,operation,formData):    
-         newCommandFactory = CommandFactory()  
-         newCommand = newCommandFactory.createCommand(operation,formData)
+         newCommand = self.newCommandFactory.createCommand(operation,formData)
          newCommand.execute(formData) 
