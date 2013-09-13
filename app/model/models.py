@@ -2,7 +2,9 @@ from app import db
 from werkzeug import generate_password_hash, check_password_hash
 
 class Customer(db.Model):
+
   __tablename__ = "customer"
+
   name = db.Column(db.String(256))
   address = db.Column(db.String(256))
   hp = db.Column(db.Integer)
@@ -10,6 +12,7 @@ class Customer(db.Model):
   dateOfJoining = db.Column(db.Date)
   points = db.Column(db.Integer)
   password = db.Column(db.String(256))
+
   def __init__(self,name, address, hp, email, dateOfJoining, password):
       self.name = name
       self.address = address

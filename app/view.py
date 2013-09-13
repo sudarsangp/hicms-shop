@@ -2,6 +2,7 @@ from flask import render_template, flash, request, session, redirect, url_for
 from flask.ext.login import login_required
 from app import app, login_manager
 
+
 from form.forms import LoginForm, RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer
 from model.models import Check, User, db, Customer
 from controller.Logic import Logic
@@ -98,7 +99,6 @@ def product_functions():
     #add the logic object here.
     if operation == "addcustomer":
       return redirect(url_for('addcustomer',operation=operation))          
-
   else:
     redirect(url_for('defaulterror')) 
  
@@ -112,8 +112,11 @@ def addcustomer(operation):
   if request.method ==  "POST":
     # the operation here refers to string that has to be used for checking 
     # in the logic object
+
     logicObject = Logic()
     logicObject.execute(operation,form)
+
+
     return operation
    
   return render_template('addcustomer.html', form = form)
