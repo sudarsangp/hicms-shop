@@ -1,6 +1,26 @@
 from app import db
 from werkzeug import generate_password_hash, check_password_hash
 
+class Customer(db.Model):
+  __tablename__ = "Customer"
+  name = db.Column(db.String(256))
+  address = db.Column(db.String(256))
+  hp = db.Column(db.Integer)
+  email = db.Column(db.String, primary_key = True)
+  dateOfJoining = db.Column(db.Date)
+  points = db.Column(db.Integer)
+  password = db.Column(db.String(256))
+  def __init__(self,name, address, hp, email, dateOfJoining, password):
+      self.name = name
+      self.address = address
+      self.hp = hp
+      self.email = email
+      self.dateOfJoining = dateOfJoining
+      self.points = 0
+      self.password = password
+
+    
+
 """ nets tuts tutorial flask login """
 class User(db.Model):
   __tablename__ = 'users'

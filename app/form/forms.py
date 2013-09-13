@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms import TextField, PasswordField, validators, BooleanField, TextAreaField, SubmitField, ValidationError, RadioField
+from wtforms import TextField, PasswordField, validators, BooleanField, TextAreaField, SubmitField, ValidationError, RadioField, DateField
 from app.model.models import User
 
 class LoginForm(Form):
@@ -18,6 +18,14 @@ class RegisterShopForm(Form):
 class ShopAdminFunction(Form):
   operations = RadioField('operations', choices = [('addproduct','Add product'),('editproduct','Edit Product'),('removeproduct','Remove Product'),
   ('addcustomer','Add Customer'),('editcustomer','Edit Customer'),('removecustomer','Remove Customer')])
+
+class AddCustomer(Form):
+  customername = TextField('customername', validators = [validators.Required()])
+  customeraddress = TextAreaField('customeraddress', validators = [validators.Required()])
+  handphone = TextField('handphone', validators = [validators.Required()])
+  emailid = TextField('emailid', validators = [validators.Required()])
+  dateofjoining = DateField('dateofjoining', validators = [validators.Required()])
+  passwordcustomer = PasswordField('passwordcustomer', validators = [validators.Required()])
 
 ################################################################################################################################################
 class SignupForm(Form):

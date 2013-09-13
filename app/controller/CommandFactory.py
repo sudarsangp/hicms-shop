@@ -12,8 +12,8 @@ Created on Sep 10, 2013
 from CustomerOperations import AddCustomer
 class CommandFactory(object):
     
-    def createCommand(self,formData):
-        if formData == "addcustomer":
+    def createCommand(self,operation,formData):
+        if operation == "addcustomer":
             addCustomerCommand = AddCustomer()
             return addCustomerCommand
         

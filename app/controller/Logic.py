@@ -7,9 +7,9 @@ from CommandFactory import CommandFactory
       Similarly, input from browser of the client also uses the same APIs of Logic class  
 '''
 
-class Logic(object):
+class Logic(object): 
     
-    def execute(self,formData): 
+    def execute(self,operation,formData):    
          newCommandFactory = CommandFactory()  
-         newCommand = newCommandFactory.createCommand(formData)
+         newCommand = newCommandFactory.createCommand(operation,formData)
          newCommand.execute(formData) 
