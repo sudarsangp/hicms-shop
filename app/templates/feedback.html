@@ -1,0 +1,13 @@
+{% extends "baselayout.html" %}
+ 
+{% block content %}
+
+<h2> This is feedback page </h2>
+<h5> Feedback Information </h5>
+{{ feedback.info }} <br>
+<h5> Feedback Data Emailid </h5>
+{{ feedback.data.emailid }} <br>
+<h5> Feedback CommandType </h5>
+{{ feedback.commandtype }} <br>
+
+{% endblock %}

@@ -2,18 +2,13 @@ from flask import render_template, flash, request, session, redirect, url_for
 from flask.ext.login import login_required
 from app import app, login_manager
 
-
-from form.forms import LoginForm, RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer
+from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer
 from model.models import Check, User, db, Customer
-from controller.Logic import Logic
+from controller import Logic
 
 @app.route('/check')
 def default():
 	return render_template("baselayout.html")
-
-#@login_manager.user_loader
-#def load_user(userid):
-#	return User.get(userid)
 
 @app.route('/register')
 def register():
@@ -82,46 +77,37 @@ def profile():
     return render_template('profile.html')
 ##############################################################################################
 
-# to check whether this page is accesible 
-@app.route("/settings")
-@login_required
-def settings():
-    return "Welcome"
-
 #for manually adding product to the database or shop
 @app.route('/product', methods = ['POST', 'GET'])
 #@login_required
 def product_functions():
-  form = ShopAdminFunction();
+  form = ShopAdminFunction()
   if request.method ==  "POST":
     
     operation = form.operations.data
     #add the logic object here.
     if operation == "addcustomer":
-      return redirect(url_for('addcustomer',operation=operation))          
-  else:
-    redirect(url_for('defaulterror')) 
- 
-  return render_template('SAproduct_operation.html',form=form)
+      return redirect(url_for('addcustomer',operation=operation))
+    else:
+      return redirect(url_for('defaulterror')) 
 
-@app.route('/addcustomer/<operation>', methods = ['POST', 'GET'])
+  elif request.method == 'GET':
+    return render_template('SAproduct_operation.html',form=form)
+
+@app.route('/<operation>', methods = ['POST', 'GET'])
 #@login_required
 def addcustomer(operation):
  
   form = AddCustomer()
   if request.method ==  "POST":
-    # the operation here refers to string that has to be used for checking 
-    # in the logic object
-
-    logicObject = Logic()
-    logicObject.execute(operation,form)
-
-
-    return operation
-   
-  return render_template('addcustomer.html', form = form)
+  
+    logicObject = Logic.Logic()
+    feedback = logicObject.execute(operation,form)
+    return render_template('feedback.html', feedback = feedback)
     
- 
+  elif request.method == 'GET':
+    return render_template('addcustomer.html', form = form)
+    
 
 @app.route('/defaulterror')
 def defaulterror():

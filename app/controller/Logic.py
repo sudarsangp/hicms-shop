@@ -15,4 +15,6 @@ class Logic(object):
      
     def execute(self,operation,formData):    
          newCommand = self.newCommandFactory.createCommand(operation,formData)
-         newCommand.execute(formData) 
+         result = newCommand.execute(formData) 
+         return result
+         #return "logic.execute"

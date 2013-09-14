@@ -4,8 +4,7 @@
      by the SQL-alchemy classes.
      
 '''
-from app.model.models import db
-from app.model.models import Customer
+from app.model.models import db, Customer
 from flask import session
 
 class StorageClass(object):
@@ -16,4 +15,24 @@ class StorageClass(object):
                                    formData.passwordcustomer.data)
     
         db.session.add(newCustomerData)
-        db.session.commit()
+        try:
+        	db.session.commit()
+        except Exception as e:
+        	#log data
+        	# this part need to check whether exception works
+        	db.session.flush()
+        	raise e
+
+
+    def query_database(self, formData):
+    	emailquery = Customer.query.filter_by(email = formData.emailid.data).first()
+    	if emailquery:
+    		# email already present in database
+    		return False
+    	else:
+    		return True
+        # need to check if data is being added to database automatically
+        #db.session.flush()
+        #db.session.refresh(newCustomerData)
+        #db.session.close()
+        #return "from StorageClass"

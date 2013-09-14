@@ -2,11 +2,6 @@ from flask.ext.wtf import Form
 from wtforms import TextField, PasswordField, validators, BooleanField, TextAreaField, SubmitField, ValidationError, RadioField, DateField
 from app.model.models import User
 
-class LoginForm(Form):
-	userid = TextField('userid', [validators.Length(min=5, max=25),validators.Required()])
-	password = PasswordField('password',[validators.Required()])
-	remember_me = BooleanField('remember_me', default = False)
-
 # TODO: Remove this class from here
 class RegisterShopForm(Form):
 	shopname = TextField('shopname', validators = [validators.Required()])
@@ -23,9 +18,13 @@ class AddCustomer(Form):
   customername = TextField('customername', validators = [validators.Required()])
   customeraddress = TextAreaField('customeraddress', validators = [validators.Required()])
   handphone = TextField('handphone', validators = [validators.Required()])
-  emailid = TextField('emailid', validators = [validators.Required()])
+  emailid = TextField('emailid', validators = [validators.Required(), validators.Email("Please enter your email address.")])
   dateofjoining = DateField('dateofjoining', validators = [validators.Required()])
   passwordcustomer = PasswordField('passwordcustomer', validators = [validators.Required()])
+
+  def __init__(self, *args, **kwargs):
+    Form.__init__(self, *args, **kwargs)
+  
 
 ################################################################################################################################################
 class SignupForm(Form):
