@@ -4,37 +4,52 @@
   <h2>Sign up</h2>
  
   {% for message in form.firstname.errors %}
-    <div class="flash">{{ message }}</div>
+    <div class="flash"><p>{{ message }}</p></div>
   {% endfor %}
    
   {% for message in form.lastname.errors %}
-    <div class="flash">{{ message }}</div>
+    <div class="flash"><p>{{ message }}</p></div>
   {% endfor %}
    
   {% for message in form.email.errors %}
-    <div class="flash">{{ message }}</div>
+    <div class="flash"><p>{{ message }}</p></div>
   {% endfor %}
    
   {% for message in form.password.errors %}
-    <div class="flash">{{ message }}</div>
+    <div class="flash"><p>{{ message }}</p></div>
   {% endfor %}
    
-  <form action="{{ url_for('signup') }}" method=post>
+  <form action="{{ url_for('signup') }}" method=post class="form-horizontal" role="form">
     {{ form.hidden_tag() }}
-     
-    {{ form.firstname.label }}
-    {{ form.firstname }}
-     
-    {{ form.lastname.label }}
-    {{ form.lastname }}
-     
-    {{ form.email.label }}
-    {{ form.email }}
-     
-    {{ form.password.label }}
-    {{ form.password }}
-     
-    {{ form.submit }}
+    <div class="form-group">   
+      {{ form.firstname.label(class="col-md-1 control-label") }}
+      <div {% if form.firstname.errors %} class = "col-lg-3 has-error" {% else %} class="col-lg-3" {% endif %} >
+        {{ form.firstname(class="form-control") }}
+      </div>
+    </div>
+    <div class="form-group">
+      {{ form.lastname.label(class="col-md-1 control-label") }}
+      <div {% if form.lastname.errors %} class = "col-lg-3 has-error" {% else %} class="col-lg-3" {% endif %} >
+        {{ form.lastname(class="form-control") }}
+      </div>
+    </div>
+    <div class="form-group">
+      {{ form.email.label(class="col-md-1 control-label") }}
+      <div {% if form.email.errors %} class = "col-lg-3 has-error" {% else %} class="col-lg-3" {% endif %} >
+        {{ form.email(class="form-control") }}
+      </div>
+    </div>
+    <div class="form-group">
+      {{ form.password.label(class="col-md-1 control-label") }}
+      <div {% if form.password.errors %} class = "col-lg-3 has-error" {% else %} class="col-lg-3" {% endif %} >
+        {{ form.password(class="form-control") }}
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-md-offset-1 col-lg-10">
+        {{ form.submit(class="btn") }}
+      </div>
+    </div>
   </form>
      
 {% endblock %}

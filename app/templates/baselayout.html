@@ -1,22 +1,59 @@
+{% extends "bootstrap/base.html" %}
 <html>
 <meta charset="utf-8">
   <head>
-    <title> Group 10 HICMS CG3002 </title>    
-     
+    <title> {% block title %} Group 10 HICMS CG3002 {%endblock%}</title> 
   </head>
   <body>
-   
+  {% block body %}
+
+        {% macro render_sitem(endpoint, display, cls='', icon_cls='', active='', align = '') %}
+          <li {% if request.endpoint == endpoint or active == endpoint %} class='active'  align="{{ align }}" {% endif %}>
+            <a class='navbar-brand' {% if request.endpoint == endpoint or active == endpoint %} href="#" {% else %} href="{{url_for(endpoint)}}"{% endif %}> {{display}}</a>
+          </li>
+        {% endmacro %}
+
     <header>
       <div class="container">
         <h1 class="logo"><center> HICMS </center></h1>
-          {% if 'email' in session %}
-          <li><a href="{{ url_for('product_functions') }}">Operations</a></li>
-          <li><a href="{{ url_for('profile') }}">Profile</a></li>
-          <li><a href="{{ url_for('signout') }}">Sign Out</a></li>
-          {% else %}
-          <li><a href="{{ url_for('signup') }}">Sign Up</a></li>
-          <li><a href="{{ url_for('signin') }}">Sign In</a></li>
-          {% endif %}
+          <nav class = "navbar navbar-default" role = "navigation">
+            <div class = "collapse navbar-collapse navbar-ex1-collapse">
+              <ul class="nav navbar-nav navbar-left">
+                {% if 'email' in session %}
+               <!--  <li {%- if request.endpoint == endpoint -%} class="active" {%- endif -%} >
+                  <a class= "navbar-brand" href="{{ url_for('product_functions') }}" >Operations</a>
+                </li>
+                <li {%- if url == url_root -%} class="active" {%- endif -%}>
+                  <a class= "navbar-brand" href="{{ url_for('profile') }}">Profile</a>
+                </li>
+                <li {%- if endpoint == request.signout -%} class="active" {%- endif -%}>
+                  <a class= "navbar-brand" href="{{ url_for('signout') }}">Sign Out</a>
+                </li> -->
+                {{render_sitem('product_functions',  ('Operations'), icon_cls='', active=active_page)}}
+                {{render_sitem('profile', ('Profile'), icon_cls='', active=active_page)}}
+                </ul>
+              
+                <ul class="nav navbar-nav navbar-right">
+                  {{render_sitem('signout', ('Sign out'), icon_cls='', active=active_page, align=right)}}
+                </ul>
+              
+              {% else %}
+              
+                <ul class="nav navbar-nav navbar-right">
+                  <!-- <li {% if endpoint == request.signup %} class="active" {% endif%}>
+                    <a href="{{ url_for('signup') }}">Sign Up</a>
+                  </li>
+                  <li {% if endpoint == request.signin %} class="active" {% endif%}>
+                    <a href="{{ url_for('signin') }}">Sign In</a>
+                  </li> -->
+                  {{render_sitem('signup', ('Sign Up'), icon_cls='', active=active_page, align=right)}}
+                  {{render_sitem('signin', ('Sign In'), icon_cls='', active=active_page, align=right)}}
+                </ul>
+              
+              {% endif %}
+            </div>
+            
+          </nav>
       </div>
     </header> 
      
@@ -25,5 +62,6 @@
       {% endblock %}
     </div>
          
+   {% endblock %}   
    </body>
 </html>

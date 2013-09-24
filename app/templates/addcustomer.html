@@ -2,7 +2,9 @@
  
 {% block content %}
 
-<form action = "" method = post>
+<form action = "" method = "post" class="form from-horizontal">
+	
+
 	Enter Customer Name
 	{{ form.customername }} <br>
 	Enter Customer Address
@@ -16,6 +18,6 @@
 	Enter Password 
 	{{ form.passwordcustomer }}
 	<br>
-	<input type="submit" value="Add Customer">
+	<input type="submit" value="Add Customer" class="btn-primary">
 </form>
 {% endblock %}
