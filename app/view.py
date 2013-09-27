@@ -2,7 +2,7 @@ from flask import render_template, flash, request, session, redirect, url_for
 from flask.ext.login import login_required
 from app import app, login_manager
 
-from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer , AddManufacturer
+from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer , AddManufacturer ,AddCategory
 from model.models import Check, User, db, Customer
 from controller import Logic
 
@@ -90,7 +90,12 @@ def product_functions():
       return redirect(url_for('addcustomer',operation = operation))
     
     elif operation == "addmanufacturer":
-      return redirect(url_for('addmanufacturer',operation = operation)) 
+      return redirect(url_for('addmanufacturer',operation = operation))
+    
+    elif operation == "addcategory":
+      return redirect(url_for('addcategory',operation = operation))	
+    	
+      
     else:
       return redirect(url_for('defaulterror')) 
 
@@ -124,6 +129,21 @@ def addmanufacturer(operation):
 	
 	elif request.method == 'GET':
 		return render_template('addmanufacturer.html', form = form)	
+
+@app.route('/category/<operation>', methods = ['POST', 'GET'])
+#@login_required
+def addcategory(operation):
+	
+	form = AddCategory()
+	if request.method == "POST":
+	
+		logicObject = Logic.Logic()
+		feedback = logicObject.execute(operation,form)
+		return render_template('feedback.html',feedback = feedback)
+	
+	elif request.method == 'GET':
+		return render_template('addcategory.html', form = form)	
+	
 	
 @app.route('/defaulterror')
 def defaulterror():

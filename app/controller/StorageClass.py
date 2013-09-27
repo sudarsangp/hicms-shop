@@ -4,7 +4,7 @@
      by the SQL-alchemy classes.
      
 '''
-from app.model.models import db, Customer,Manufacturers
+from app.model.models import db, Customer,Manufacturers,Category
 from flask import session
 
 class StorageClass(object):
@@ -52,5 +52,18 @@ class StorageClass(object):
             return False
         else:
             return True
-               
+    
+    def addCategoryToDatabase(self,formData):
+        newManufacturerData = Category(formData.categoryId.data, formData.categoryDescription.data)
         
+        db.session.add(newManufacturerData) 
+        db.session.commit()    
+               
+    def check_if_category_exists(self,formData):
+        category_id = Category.query.filter_by( categoryId = formData.categoryId.data).first()
+        
+        if category_id:
+            return False
+        else:
+            return True
+         

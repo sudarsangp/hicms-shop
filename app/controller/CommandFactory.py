@@ -11,6 +11,7 @@ Created on Sep 10, 2013
 '''
 from CustomerOperations import AddCustomer
 from ManufacturerOperations import AddManufacturer
+from CategoryOperations import AddCategory
 class CommandFactory(object):
     
     def createCommand(self,operation,formData):
@@ -18,7 +19,10 @@ class CommandFactory(object):
             addCustomerCommand = AddCustomer()
             return addCustomerCommand
         
-        if operation == "addmanufacturer":
+        elif operation == "addmanufacturer":
             addManufacturerCommand = AddManufacturer()
             return addManufacturerCommand
-    
+        
+        elif operation == "addcategory":
+            addCategoryCommand = AddCategory()
+            return addCategoryCommand

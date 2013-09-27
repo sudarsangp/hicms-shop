@@ -12,7 +12,7 @@ class RegisterShopForm(Form):
 
 class ShopAdminFunction(Form):
   operations = RadioField('operations', choices = [('addproduct','Add product'),('editproduct','Edit Product'),('removeproduct','Remove Product'),
-  ('addcustomer','Add Customer'),('editcustomer','Edit Customer'),('removecustomer','Remove Customer'),('addmanufacturer','Add Manufacturer')])
+  ('addcustomer','Add Customer'),('editcustomer','Edit Customer'),('removecustomer','Remove Customer'),('addmanufacturer','Add Manufacturer'),('addcategory','Add Category')])
 
 class AddCustomer(Form):
   customername = TextField('customername', validators = [validators.Required()])
@@ -32,7 +32,13 @@ class AddManufacturer(Form):
 	
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
-  
+
+class AddCategory(Form):
+  categoryId = TextField('categoryId',validators = [validators.Required()])
+  categoryDescription = TextField('categoryDescription',validators = [validators.Required()])
+	
+  def __init__(self, *args, **kwargs):
+    Form.__init__(self, *args, **kwargs)  
 
 ################################################################################################################################################
 class SignupForm(Form):

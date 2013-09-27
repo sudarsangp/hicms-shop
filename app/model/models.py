@@ -22,6 +22,17 @@ class Customer(db.Model):
       self.points = 0
       self.password = password
 
+class Category(db.Model):
+    __tablename__ = "Category"
+    
+    categoryId = db.Column(db.String(256),primary_key= True) 
+    categoryDescription = db.Column(db.String(256),nullable = False)
+    
+    def __init__(self,categoryId,categoryDescription):
+        self.categoryDescription = categoryDescription
+        self.categoryId = categoryId
+            
+
 class Manufacturers(db.Model):    
     
   __tablename__ = "Manufacturers"
