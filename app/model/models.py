@@ -17,7 +17,7 @@ class Customer(db.Model):
       self.name = name
       self.address = address
       self.hp = hp
-      self.email = email
+      self.email = email.lower()
       self.dateOfJoining = dateOfJoining
       self.points = 0
       self.password = password
