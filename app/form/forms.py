@@ -12,7 +12,7 @@ class RegisterShopForm(Form):
 
 class ShopAdminFunction(Form):
   operations = RadioField('operations', choices = [('addproduct','Add product'),('editproduct','Edit Product'),('removeproduct','Remove Product'),
-  ('addcustomer','Add Customer'),('editcustomer','Edit Customer'),('removecustomer','Remove Customer')])
+  ('addcustomer','Add Customer'),('editcustomer','Edit Customer'),('removecustomer','Remove Customer'),('addmanufacturer','Add Manufacturer')])
 
 class AddCustomer(Form):
   customername = TextField('customername', validators = [validators.Required()])
@@ -21,7 +21,15 @@ class AddCustomer(Form):
   emailid = TextField('emailid', validators = [validators.Required(), validators.Email("Please enter your email address.")])
   dateofjoining = DateField('dateofjoining', validators = [validators.Required()])
   passwordcustomer = PasswordField('passwordcustomer', validators = [validators.Required()])
+  
+  def __init__(self, *args, **kwargs):
+   Form.__init__(self, *args, **kwargs)
 
+class AddManufacturer(Form):
+  manufacturerId = TextField('manufacturerId',validators = [validators.Required()])
+  name = TextField('name',validators = [validators.Required()])
+  isContractValid = TextField('isContractValid',validators = [validators.Required()])
+	
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
   

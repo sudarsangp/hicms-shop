@@ -4,7 +4,7 @@
      by the SQL-alchemy classes.
      
 '''
-from app.model.models import db, Customer
+from app.model.models import db, Customer,Manufacturers
 from flask import session
 
 class StorageClass(object):
@@ -31,8 +31,26 @@ class StorageClass(object):
     		return False
     	else:
     		return True
+ 
+    def addManufacturerToDatabase(self,formData):
+      #  newManufacturerData = Manufacturers(formData.manufacturerId.data, formData.name.data, formData.isContractValid.data) 
+        newManufacturerData = Manufacturers(formData.manufacturerId.data, formData.name.data, True) 
+        #isManufacturerIdPresent
+        
+        db.session.add(newManufacturerData) 
+        db.session.commit()
         # need to check if data is being added to database automatically
         #db.session.flush()
         #db.session.refresh(newCustomerData)
         #db.session.close()
         #return "from StorageClass"
+    
+    def check_if_manufacturer_exists(self,formData):
+        manufacturer_id = Manufacturers.query.filter_by( manufacturerId = formData.manufacturerId.data).first()
+        
+        if manufacturer_id:
+            return False
+        else:
+            return True
+               
+        
