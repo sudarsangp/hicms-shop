@@ -2,7 +2,7 @@ from flask import render_template, flash, request, session, redirect, url_for
 from flask.ext.login import login_required
 from app import app, login_manager
 
-from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer
+from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer , AddManufacturer
 from model.models import Check, User, db, Customer
 from controller import Logic
 
@@ -87,14 +87,17 @@ def product_functions():
     operation = form.operations.data
     #add the logic object here.
     if operation == "addcustomer":
-      return redirect(url_for('addcustomer',operation=operation))
+      return redirect(url_for('addcustomer',operation = operation))
+    
+    elif operation == "addmanufacturer":
+      return redirect(url_for('addmanufacturer',operation = operation)) 
     else:
       return redirect(url_for('defaulterror')) 
 
   elif request.method == 'GET':
     return render_template('SAproduct_operation.html',form=form)
 
-@app.route('/<operation>', methods = ['POST', 'GET'])
+@app.route('/customer/<operation>', methods = ['POST', 'GET'])
 #@login_required
 def addcustomer(operation):
  
@@ -107,8 +110,21 @@ def addcustomer(operation):
     
   elif request.method == 'GET':
     return render_template('addcustomer.html', form = form)
-    
 
+@app.route('/manufacturer/<operation>', methods = ['POST', 'GET'])
+#@login_required    
+def addmanufacturer(operation):
+	
+	form = AddManufacturer()
+	if request.method == "POST":
+	
+		logicObject = Logic.Logic()
+		feedback = logicObject.execute(operation,form)
+		return render_template('feedback.html',feedback = feedback)
+	
+	elif request.method == 'GET':
+		return render_template('addmanufacturer.html', form = form)	
+	
 @app.route('/defaulterror')
 def defaulterror():
   return "Error found"

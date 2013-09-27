@@ -1,0 +1,13 @@
+{% extends "baselayout.html" %}
+ 
+{% block content %}
+
+<form action = "" method = post>
+	Enter Manufacturer Id
+	{{ form.manufacturerId }} <br>
+	Enter Manufacturer Name
+	{{ form.name }} <br>
+	
+		<input type="submit" value="Add Manufacturer">
+</form>
+{% endblock %}

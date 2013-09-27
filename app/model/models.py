@@ -22,7 +22,19 @@ class Customer(db.Model):
       self.points = 0
       self.password = password
 
+class Manufacturers(db.Model):    
     
+  __tablename__ = "Manufacturers"
+  
+  manufacturerId = db.Column(db.String(256),primary_key= True)  
+  name = db.Column(db.String(256),nullable = False)
+  isContractValid = db.Column(db.Boolean,nullable = False)
+  
+  def __init__(self,manufacturerId,name,isContractValid):
+       self.manufacturerId = manufacturerId 
+       self.name = name
+       self.isContractValid = isContractValid 
+  
 
 """ nets tuts tutorial flask login """
 class User(db.Model):
