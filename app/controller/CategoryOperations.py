@@ -35,4 +35,16 @@ class AddCategory(Command):
          return self.feedbackObject
     
     def check_existing_item(self, formData):
-        return self.storageObject.check_if_category_exists(formData)            
+        return self.storageObject.check_if_category_not_exists(formData.categoryId.data)
+
+class ViewCategories(Command):
+    def __init__(self):
+        self.storageObject = StorageClass()
+        self.feedbackObject = Feedback()
+         
+    def execute(self,formData):
+        return self.get_categories(formData)
+    
+    def get_categories(self,formData):
+        return self.storageObject.get_categories_from_db(formData)     
+                    

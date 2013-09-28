@@ -27,11 +27,12 @@ class Category(db.Model):
     
     categoryId = db.Column(db.String(256),primary_key= True) 
     categoryDescription = db.Column(db.String(256),nullable = False)
+    isExpirable = db.Column(db.Boolean,nullable = False)
     
-    def __init__(self,categoryId,categoryDescription):
+    def __init__(self,categoryId,categoryDescription,isExpirable):
         self.categoryDescription = categoryDescription
         self.categoryId = categoryId
-            
+        self.isExpirable = isExpirable    
 
 class Manufacturers(db.Model):    
     
@@ -45,7 +46,33 @@ class Manufacturers(db.Model):
        self.manufacturerId = manufacturerId 
        self.name = name
        self.isContractValid = isContractValid 
-  
+
+class Products(db.Model):
+    __tablename__= "Products"  
+    
+    barcode = db.Column(db.String(256),primary_key= True)
+    name = db.Column(db.String(256),nullable = False)
+    manufacturerId = db.Column(db.String(256),nullable = False)
+    category = db.Column(db.String(256),nullable = False)
+    price = db.Column(db.Float,nullable = False)
+    minStock = db.Column(db.Integer,nullable = False)
+    currentStock = db.Column(db.Integer,nullable = False)
+    bundleUnit = db.Column(db.Integer,nullable = False)
+    displayPrice = db.Column(db.Float,nullable = False)
+    displayQty = db.Column(db.Integer,nullable = False)
+
+    def __init__(self,barcode,name,manufacturerId,category,price,minStock,currentStock,bundleUnit,displayPrice,displayQty):
+       self.barcode = barcode 
+       self.name = name
+       self.manufacturerId = manufacturerId
+       self.category = category
+       self.price = price
+       self.minStock = minStock
+       self.currentStock = currentStock
+       self.bundleUnit = bundleUnit
+       self.displayPrice = displayPrice
+       self.displayQty = displayQty
+       
 
 """ nets tuts tutorial flask login """
 class User(db.Model):
