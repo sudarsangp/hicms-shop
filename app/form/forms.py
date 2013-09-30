@@ -1,5 +1,5 @@
 from flask.ext.wtf import Form
-from wtforms import TextField, PasswordField, validators, BooleanField, TextAreaField, SubmitField, ValidationError, RadioField, DateField
+from wtforms import TextField, PasswordField, validators, BooleanField, TextAreaField, SubmitField, ValidationError, RadioField, DateField, SelectField,FormField
 from app.model.models import User
 
 # TODO: Remove this class from here
@@ -12,7 +12,7 @@ class RegisterShopForm(Form):
 
 class ShopAdminFunction(Form):
   operations = RadioField('operations', choices = [('addproduct','Add product'),('editproduct','Edit Product'),('removeproduct','Remove Product'),
-  ('addcustomer','Add Customer'),('editcustomer','Edit Customer'),('removecustomer','Remove Customer')])
+  ('addcustomer','Add Customer'),('editcustomer','Edit Customer'),('removecustomer','Remove Customer'),('addmanufacturer','Add Manufacturer'),('addcategory','Add Category'),('addproduct','Add Product')])
 
 class AddCustomer(Form):
   customername = TextField('customername', validators = [validators.Required()])
@@ -21,10 +21,45 @@ class AddCustomer(Form):
   customerId = TextField('customerId', validators = [validators.Required()])
   dateofjoining = DateField('dateofjoining', validators = [validators.Required()])
   passwordcustomer = PasswordField('passwordcustomer', validators = [validators.Required()])
+  
+  def __init__(self, *args, **kwargs):
+   Form.__init__(self, *args, **kwargs)
 
+class AddManufacturer(Form):
+  manufacturerId = TextField('manufacturerId',validators = [validators.Required("Please enter manufacturer Id")])
+  mname = TextField('name',validators = [validators.Required("Please enter manufacturer Name")])
+  isContractValid = TextField('isContractValid',validators = [validators.Required()])
+	
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
+
+class AddCategory(Form):
+  categoryId = TextField('categoryId',validators = [validators.Required()])
+  categoryDescription = TextField('categoryDescription',validators = [validators.Required()])
+  isExpirable = TextField('isExpirable',validators = [validators.Required()])
+	
+  def __init__(self, *args, **kwargs):
+    Form.__init__(self, *args, **kwargs)  
+    
+class AddProduct(Form):
+  barcode = TextField('barcode',validators = [validators.Required()])
+  proname = TextField('name',validators = [validators.Required()])
+  manufacturerId = SelectField('manufacturerId',choices=[])
+  manufacturerForm = FormField(AddManufacturer)
+#  manufacturerId = TextField('manufacturerId',validators = [validators.Required()])
+  category = SelectField('category',choices=[])
+  categoryForm = FormField(AddCategory)
+  price = TextField('price',validators = [validators.Required()])
+  minStock = TextField('minStock',validators = [validators.Required()])
+  currentStock = TextField('currentStock',validators = [validators.Required()])
+  bundleUnit = TextField('bundleUnit',validators = [validators.Required()])
+  displayPrice = TextField('displayPrice',validators = [validators.Required()])
+  displayQty = TextField('displayQty',validators = [validators.Required()])
+	
+  def __init__(self, *args, **kwargs):
+    Form.__init__(self, *args, **kwargs)  
   
+
 
 ################################################################################################################################################
 class SignupForm(Form):

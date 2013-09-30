@@ -7,7 +7,7 @@ class Feedback(object):
 	def setinfo(self, info):
 		self.info = info
 
-	def getinfor(self):
+	def getinfo(self):
 		return self.info
 
 	def setdata(self, data):

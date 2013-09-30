@@ -10,6 +10,10 @@ Created on Sep 10, 2013
      
 '''
 from CustomerOperations import AddCustomer
+from ManufacturerOperations import AddManufacturer,ViewManufacturers
+from CategoryOperations import AddCategory,ViewCategories
+from ProductOperations import AddProduct
+
 class CommandFactory(object):
     
     def createCommand(self,operation,formData):
@@ -17,5 +21,24 @@ class CommandFactory(object):
             addCustomerCommand = AddCustomer()
             return addCustomerCommand
         
+        elif operation == "addmanufacturer":
+            addManufacturerCommand = AddManufacturer()
+            return addManufacturerCommand
         
-    
+        elif operation == "addcategory":
+            addCategoryCommand = AddCategory()
+            return addCategoryCommand
+        
+        elif operation == "addproduct":
+            addProductCommand = AddProduct()
+            return addProductCommand
+        
+        elif operation == "viewmanufacturers":
+            viewManufacturersCommand = ViewManufacturers()
+            return viewManufacturersCommand
+        
+        elif operation == "viewcategories":
+            viewCategoriesCommand = ViewCategories()
+            return viewCategoriesCommand
+        
+        
