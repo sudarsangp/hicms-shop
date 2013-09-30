@@ -78,7 +78,7 @@ class ToJson(object):
                     list1.append(data_stock)
                 open(fname, 'w').close()
         except IOError:
-          no_file = {'update':'No file'}  
+            no_file = {'update':'No file'} 
         
         # comment this to avoid sending stock that have not changed used for setup purpose only
         #for row in Products.query.all():
@@ -118,4 +118,6 @@ class ToJson(object):
         final_json = {'Stock' : list1, 'SoldStock' : list2}
         send_shopid_json = {'1':final_json}
         print send_shopid_json
+        print len(list2)
+        print len(list1)
         return send_shopid_json

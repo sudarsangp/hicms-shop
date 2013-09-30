@@ -45,4 +45,5 @@ class InterfaceForPos(object):
             
         else:
             return productEntered.price     
-          
+    
+    

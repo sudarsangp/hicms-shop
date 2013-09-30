@@ -232,21 +232,33 @@ class StorageClass(object):
         if productToIncreaseDisplay is None:
             self.storageFeedback.setinfo("Sorry the barcode does not exist")
             self.storageFeedback.setexecutionstatus(False)
+            self.storageFeedback.setcommandtype("add display stock")
+            self.storageFeedback.setdata("None")
         
+        elif int(productToIncreaseDisplay.currentStock) > int(0.9 * productToIncreaseDisplay.minStock):
+            self.storageFeedback.setinfo("restock required reaching below 90 percent of minstock")
+            self.storageFeedback.setdata("90 % of minstock is " + str(int(0.9 * productToIncreaseDisplay.minStock)))
+            self.storageFeedback.setcommandtype("add display stock")
+
         elif(int(productToIncreaseDisplay.currentStock) > int(formData.quantity.data)):
 
             productToIncreaseDisplay.currentStock = productToIncreaseDisplay.currentStock- int(formData.quantity.data)
             productToIncreaseDisplay.displayQty =  productToIncreaseDisplay.displayQty + int(formData.quantity.data)
-            productToIncreaseDisplay.displayPrice = productToIncreaseDisplay.price 
+            productToIncreaseDisplay.displayPrice = productToIncreaseDisplay.price
+            newqty = productToIncreaseDisplay.displayQty
             db.session.add(productToIncreaseDisplay)
             db.session.commit()
 
             self.storageFeedback.setexecutionstatus(True)
             self.storageFeedback.setinfo("Successfully increased Display Stock levels")
+            self.storageFeedback.setcommandtype("add display stock")
+            self.storageFeedback.setdata(newqty)
         
         else:
             self.storageFeedback.setinfo("Sorry the current Stock level is less than requested Quantity")
             self.storageFeedback.setexecutionstatus(False)
+            self.storageFeedback.setcommandtype("add display stock")
+            self.storageFeedback.setdata("None")
                  
         return self.storageFeedback   
          
