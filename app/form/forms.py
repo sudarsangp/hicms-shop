@@ -18,7 +18,7 @@ class AddCustomer(Form):
   customername = TextField('customername', validators = [validators.Required()])
   customeraddress = TextAreaField('customeraddress', validators = [validators.Required()])
   handphone = TextField('handphone', validators = [validators.Required()])
-  emailid = TextField('emailid', validators = [validators.Required(), validators.Email("Please enter your email address.")])
+  customerId = TextField('customerId', validators = [validators.Required()])
   dateofjoining = DateField('dateofjoining', validators = [validators.Required()])
   passwordcustomer = PasswordField('passwordcustomer', validators = [validators.Required()])
 

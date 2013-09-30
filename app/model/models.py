@@ -8,16 +8,16 @@ class Customer(db.Model):
   name = db.Column(db.String(256))
   address = db.Column(db.String(256))
   hp = db.Column(db.Integer)
-  email = db.Column(db.String, primary_key = True)
+  customerId = db.Column(db.String, primary_key = True)
   dateOfJoining = db.Column(db.Date)
   points = db.Column(db.Integer)
   password = db.Column(db.String(256))
 
-  def __init__(self,name, address, hp, email, dateOfJoining, password):
+  def __init__(self,name, address, hp, customerId, dateOfJoining, password):
       self.name = name
       self.address = address
       self.hp = hp
-      self.email = email
+      self.customerId = customerId
       self.dateOfJoining = dateOfJoining
       self.points = 0
       self.password = password
