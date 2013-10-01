@@ -2,6 +2,14 @@ from flask.ext.wtf import Form
 from wtforms import TextField, PasswordField, validators, BooleanField, TextAreaField, SubmitField, ValidationError, RadioField, DateField, SelectField,FormField
 from app.model.models import User
 
+def validateNotEmpty(form,field):
+  s = field.data
+  s = s.replace(' ','')
+  if len(s) == 0:
+    raise ValidationError('Cannot give empty space')
+
+
+
 # TODO: Remove this class from here
 class RegisterShopForm(Form):
 	shopname = TextField('shopname', validators = [validators.Required()])
@@ -15,10 +23,10 @@ class ShopAdminFunction(Form):
   ('addcustomer','Add Customer'),('editcustomer','Edit Customer'),('removecustomer','Remove Customer'),('addmanufacturer','Add Manufacturer'),('addcategory','Add Category'),('addproduct','Add Product')])
 
 class AddCustomer(Form):
-  customername = TextField('customername', validators = [validators.Required()])
-  customeraddress = TextAreaField('customeraddress', validators = [validators.Required()])
-  handphone = TextField('handphone', validators = [validators.Required()])
-  customerId = TextField('customerId', validators = [validators.Required()])
+  customername = TextField('customername', validators = [validators.Required(), validateNotEmpty])
+  customeraddress = TextAreaField('customeraddress', validators = [validators.Required(), validateNotEmpty ])
+  handphone = TextField('handphone', validators = [validators.Required(), validateNotEmpty])
+  customerId = TextField('customerId', validators = [validators.Required(), validateNotEmpty]) 
   dateofjoining = DateField('dateofjoining', validators = [validators.Required()])
   passwordcustomer = PasswordField('passwordcustomer', validators = [validators.Required()])
   
