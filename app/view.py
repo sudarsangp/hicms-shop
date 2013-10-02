@@ -110,14 +110,14 @@ def product_functions():
 def addcustomer(operation):
  
   form = AddCustomer()
-  if request.method ==  "POST":
+  if request.method ==  "POST" and form.validate():
   
     logicObject = Logic.Logic()
     feedback = logicObject.execute(operation,form)
     return render_template('feedback.html', feedback = feedback)
     
-  elif request.method == 'GET':
-    return render_template('addcustomer.html', form = form)
+  else:
+   return render_template('addcustomer.html', form = form)
 
 @app.route('/manufacturer/<operation>', methods = ['POST', 'GET'])
 #@login_required    

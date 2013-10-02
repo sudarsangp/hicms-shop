@@ -11,7 +11,7 @@ class StorageClass(object):
     
     def addCustomerTODatabase(self,formData):
         newCustomerData = Customer(formData.customername.data,formData.customeraddress.data,
-                                   formData.handphone.data,formData.emailid.data,formData.dateofjoining.data,
+                                   formData.handphone.data,formData.customerId.data,formData.dateofjoining.data,
                                    formData.passwordcustomer.data)
     
         db.session.add(newCustomerData)
@@ -25,8 +25,8 @@ class StorageClass(object):
 
 
     def query_database(self, formData):
-    	emailquery = Customer.query.filter_by(email = formData.emailid.data).first()
-    	if emailquery:
+    	idQuery = Customer.query.filter_by(customerId = formData.customerId.data).first()
+    	if idQuery:
     		# email already present in database
     		return False
     	else:
