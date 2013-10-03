@@ -2,11 +2,18 @@ from flask.ext.wtf import Form
 from wtforms import TextField, PasswordField, validators, BooleanField, TextAreaField, SubmitField, ValidationError, RadioField, DateField, SelectField,FormField
 from app.model.models import User
 
+import re
+
 def validateNotEmpty(form,field):
   s = field.data
   s = s.replace(' ','')
   if len(s) == 0:
     raise ValidationError('Cannot give empty space')
+
+def validateNumber(form,field):
+  s = field.data
+  if re.match("^\D+$",s):
+    raise ValidationError('please enter only numbers')
 
 
 
@@ -25,7 +32,7 @@ class ShopAdminFunction(Form):
 class AddCustomer(Form):
   customername = TextField('customername', validators = [validators.Required(), validateNotEmpty])
   customeraddress = TextAreaField('customeraddress', validators = [validators.Required(), validateNotEmpty ])
-  handphone = TextField('handphone', validators = [validators.Required(), validateNotEmpty])
+  handphone = TextField('handphone', validators = [validators.Required(), validateNotEmpty, validateNumber])
   customerId = TextField('customerId', validators = [validators.Required(), validateNotEmpty]) 
   dateofjoining = DateField('dateofjoining', validators = [validators.Required()])
   passwordcustomer = PasswordField('passwordcustomer', validators = [validators.Required()])
@@ -34,35 +41,35 @@ class AddCustomer(Form):
    Form.__init__(self, *args, **kwargs)
 
 class AddManufacturer(Form):
-  manufacturerId = TextField('manufacturerId',validators = [validators.Required("Please enter manufacturer Id")])
-  mname = TextField('name',validators = [validators.Required("Please enter manufacturer Name")])
+  manufacturerId = TextField('manufacturerId',validators = [validators.Required("Please enter manufacturer Id"), validateNotEmpty])
+  mname = TextField('name',validators = [validators.Required("Please enter manufacturer Name"), validateNotEmpty])
   isContractValid = TextField('isContractValid',validators = [validators.Required()])
 	
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
 
 class AddCategory(Form):
-  categoryId = TextField('categoryId',validators = [validators.Required()])
-  categoryDescription = TextField('categoryDescription',validators = [validators.Required()])
+  categoryId = TextField('categoryId',validators = [validators.Required(), validateNotEmpty])
+  categoryDescription = TextField('categoryDescription',validators = [validators.Required(), validateNotEmpty])
   isExpirable = TextField('isExpirable',validators = [validators.Required()])
 	
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)  
     
 class AddProduct(Form):
-  barcode = TextField('barcode',validators = [validators.Required()])
-  proname = TextField('name',validators = [validators.Required()])
+  barcode = TextField('barcode',validators = [validators.Required(), validateNotEmpty, validateNumber])
+  proname = TextField('name',validators = [validators.Required(), validateNotEmpty])
   manufacturerId = SelectField('manufacturerId',choices=[])
   manufacturerForm = FormField(AddManufacturer)
 #  manufacturerId = TextField('manufacturerId',validators = [validators.Required()])
   category = SelectField('category',choices=[])
   categoryForm = FormField(AddCategory)
-  price = TextField('price',validators = [validators.Required()])
-  minStock = TextField('minStock',validators = [validators.Required()])
-  currentStock = TextField('currentStock',validators = [validators.Required()])
-  bundleUnit = TextField('bundleUnit',validators = [validators.Required()])
-  displayPrice = TextField('displayPrice',validators = [validators.Required()])
-  displayQty = TextField('displayQty',validators = [validators.Required()])
+  price = TextField('price',validators = [validators.Required(), validateNotEmpty, validateNumber])
+  minStock = TextField('minStock',validators = [validators.Required(), validateNotEmpty, validateNumber])
+  currentStock = TextField('currentStock',validators = [validators.Required(), validateNotEmpty, validateNumber])
+  bundleUnit = TextField('bundleUnit',validators = [validators.Required(), validateNumber, validateNotEmpty])
+  displayPrice = TextField('displayPrice',validators = [validators.Required(), validateNumber, validateNotEmpty])
+  displayQty = TextField('displayQty',validators = [validators.Required(), validateNumber, validateNotEmpty])
 	
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)  
