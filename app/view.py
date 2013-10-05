@@ -2,7 +2,7 @@ from flask import render_template, flash, request, session, redirect, url_for
 from flask.ext.login import login_required
 from app import app, login_manager
 
-from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer , AddManufacturer
+from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer, AddManufacturer, AddStock
 from model.models import Check, User, db, Customer
 from controller import Logic
 
@@ -91,6 +91,10 @@ def product_functions():
     
     elif operation == "addmanufacturer":
       return redirect(url_for('addmanufacturer',operation = operation)) 
+
+    elif operation == "addstock":
+      return redirect(url_for('addstock',operation = operation)) 
+
     else:
       return redirect(url_for('defaulterror')) 
 
@@ -125,6 +129,19 @@ def addmanufacturer(operation):
 	elif request.method == 'GET':
 		return render_template('addmanufacturer.html', form = form)	
 	
+@app.route('/stock/<operation>', methods = ['POST', 'GET'])
+#@login_required
+def addstock(operation):
+
+  form = AddStock()
+  if request.method == 'POST':
+    logicObject = Logic.Logic()
+    feedback = logicObject.execute(operation, form)
+    return render_template('feedback.html', feedback = feedback)
+
+  elif request.method == 'GET':
+    return render_template('addstock.html', form = form)
+
 @app.route('/defaulterror')
 def defaulterror():
   return "Error found"

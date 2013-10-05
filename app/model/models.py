@@ -22,6 +22,21 @@ class Customer(db.Model):
       self.points = 0
       self.password = password
 
+class Stock(db.Model):
+
+  __tablename__ = "Stock"
+
+  barcode = db.Column(db.String(256), primary_key = True)
+  serialNumber = db.Column(db.String(256), primary_key = True)
+  batchQty = db.Column(db.Integer)
+  isOnDsiplay = db.Column(db.Boolean)
+
+  def __init__(self, barcode, serialNumber, batchQty, isOnDsiplay):
+    self.barcode = barcode
+    self.serialNumber = serialNumber
+    self.batchQty = batchQty
+    self.isOnDsiplay = isOnDsiplay
+
 class Manufacturers(db.Model):    
     
   __tablename__ = "Manufacturers"

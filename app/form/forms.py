@@ -12,7 +12,8 @@ class RegisterShopForm(Form):
 
 class ShopAdminFunction(Form):
   operations = RadioField('operations', choices = [('addproduct','Add product'),('editproduct','Edit Product'),('removeproduct','Remove Product'),
-  ('addcustomer','Add Customer'),('editcustomer','Edit Customer'),('removecustomer','Remove Customer'),('addmanufacturer','Add Manufacturer')])
+  ('addcustomer','Add Customer'),('editcustomer','Edit Customer'),('removecustomer','Remove Customer'),('addmanufacturer','Add Manufacturer'),
+  ('addstock', 'Add Stock')])
 
 class AddCustomer(Form):
   customername = TextField('customername', validators = [validators.Required()])
@@ -33,6 +34,14 @@ class AddManufacturer(Form):
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
   
+class AddStock(Form):
+  barcode = TextField('barcode', validators = [validators.Required()])
+  serialNumber = TextField('serialNumber', validators = [validators.Required()])
+  batchQty = TextField('batchQty', validators = [validators.Required()])
+  isOnDisplay = TextField('isOnDisplay', validators = [validators.Required()])
+
+  def __init__(self, *args, **kwargs):
+    Form.__init__(self, *args, **kwargs)
 
 ################################################################################################################################################
 class SignupForm(Form):

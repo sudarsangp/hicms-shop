@@ -4,7 +4,7 @@
      by the SQL-alchemy classes.
      
 '''
-from app.model.models import db, Customer,Manufacturers
+from app.model.models import db, Customer,Manufacturers, Stock
 from flask import session
 
 class StorageClass(object):
@@ -53,4 +53,16 @@ class StorageClass(object):
         else:
             return True
                
-        
+    def addStockToDatabase(self, formData):
+        newStockData = Stock(formData.barcode.data, formData.serialNumber.data, formData.batchQty.data, formData.isOnDisplay.data)
+        db.session.add(newStockData)
+        db.session.commit()
+
+    def check_if_stock_exists(self, formData):
+        barcodequery = Stock.query.filter_by(barcode = formData.barcode.data).first()
+        serialNumber = Stock.query.filter_by(serialNumber = formData.serialNumber.data).first()
+
+        if barcodequery and serialNumber:
+            return False
+        else:
+            return True
