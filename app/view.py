@@ -2,7 +2,9 @@ from flask import render_template, flash, request, session, redirect, url_for
 from flask.ext.login import login_required
 from app import app, login_manager
 
-from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer, AddManufacturer, AddStock
+
+from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer , AddManufacturer , AddStock, AddCategory, AddProduct
+
 from model.models import Check, User, db, Customer
 from controller import Logic
 
@@ -90,11 +92,17 @@ def product_functions():
       return redirect(url_for('addcustomer',operation = operation))
     
     elif operation == "addmanufacturer":
-      return redirect(url_for('addmanufacturer',operation = operation)) 
-
+      return redirect(url_for('addmanufacturer',operation = operation))
+    
     elif operation == "addstock":
       return redirect(url_for('addstock',operation = operation)) 
 
+    elif operation == "addcategory":
+      return redirect(url_for('addcategory',operation = operation))	
+    
+    elif operation == "addproduct":
+      return redirect(url_for('addproduct',operation = operation))
+    	
     else:
       return redirect(url_for('defaulterror')) 
 
@@ -106,14 +114,14 @@ def product_functions():
 def addcustomer(operation):
  
   form = AddCustomer()
-  if request.method ==  "POST":
+  if request.method ==  "POST" and form.validate():
   
     logicObject = Logic.Logic()
     feedback = logicObject.execute(operation,form)
     return render_template('feedback.html', feedback = feedback)
     
-  elif request.method == 'GET':
-    return render_template('addcustomer.html', form = form)
+  else:
+   return render_template('addcustomer.html', form = form)
 
 @app.route('/manufacturer/<operation>', methods = ['POST', 'GET'])
 #@login_required    
@@ -128,14 +136,71 @@ def addmanufacturer(operation):
 	
 	elif request.method == 'GET':
 		return render_template('addmanufacturer.html', form = form)	
+
+@app.route('/category/<operation>', methods = ['POST', 'GET'])
+#@login_required
+def addcategory(operation):
 	
-@app.route('/stock/<operation>', methods = ['POST', 'GET'])
+	form = AddCategory()
+	if request.method == "POST":
+	
+		logicObject = Logic.Logic()
+		feedback = logicObject.execute(operation,form)
+		return render_template('feedback.html',feedback = feedback)
+	
+	elif request.method == 'GET':
+		return render_template('addcategory.html', form = form)	
+	
+@app.route('/productadd/<operation>', methods = ['POST', 'GET'])
+#@login_required    
+def addproduct(operation):
+	
+	logicObject = Logic.Logic()
+	manufacturers = logicObject.execute('viewmanufacturers',None)
+	manufacturer_choices = [(manufacturer.manufacturerId,manufacturer.name) for manufacturer in manufacturers]
+	manufacturer_choices.append(('-1','None'))
+	categories = logicObject.execute('viewcategories',None)
+	category_choices =[(category.categoryId,category.categoryDescription) for category in categories]
+	category_choices.append(('-1','None'))
+	
+	form = AddProduct()	
+	form.manufacturerId.choices = manufacturer_choices
+	form.category.choices = category_choices
+	if request.method == "POST":
+		if(form.manufacturerId.data == '-1'):
+			form.manufacturerId.data = form.manufacturerForm.manufacturerId.data
+			feedback = logicObject.execute('addmanufacturer',form.manufacturerForm)
+			if(feedback.getinfo() != "Success: data added "):
+				return render_template('feedback.html',feedback = feedback)
+		
+		if(form.category.data == '-1'):
+			form.category.data = form.categoryForm.categoryId.data	
+			feedback = logicObject.execute('addcategory',form.categoryForm)
+			if(feedback.getinfo() != "Success: data added "):
+				return render_template('feedback.html',feedback = feedback)	
+		
+		
+		feedback = logicObject.execute(operation,form)
+		
+		return render_template('feedback.html',feedback = feedback)
+	
+	elif request.method == 'GET':
+		return render_template('addproduct.html', form = form)
+	
+	
+@app.route('/stockadd/<operation>', methods = ['POST', 'GET'])
 #@login_required
 def addstock(operation):
 
+  logicObject = Logic.Logic()
+  products = logicObject.execute('viewproducts', None)
+  product_choices = [(prod.barcode,prod.barcode) for prod in products]
+  product_choices.append(('-1','None'))
+
   form = AddStock()
+  form.barcode.choices = product_choices
   if request.method == 'POST':
-    logicObject = Logic.Logic()
+    
     feedback = logicObject.execute(operation, form)
     return render_template('feedback.html', feedback = feedback)
 

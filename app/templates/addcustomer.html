@@ -2,22 +2,59 @@
  
 {% block content %}
 
-<form action = "" method = "post" class="form from-horizontal">
-	
 
-	Enter Customer Name
-	{{ form.customername }} <br>
-	Enter Customer Address
-	{{ form.customeraddress }} <br>
-	Enter Customer Hp
-	{{ form.handphone }} <br>
-	Enter Customer Email Id
-	{{ form.emailid }} <br>
-	Enter Date of Joining
-	{{ form.dateofjoining }} <br>
-	Enter Password 
-	{{ form.passwordcustomer }}
-	<br>
-	<input type="submit" value="Add Customer" class="btn-primary">
+<form action = "" method = "post" role = "form" class="form">
+	<div class="row">
+	<div class = "form-group col-lg-3">	
+		<label class="control-label">Enter Customer Name</label>
+		<div {% if form.customername.errors %} class = "has-error" {% else %} class="" {% endif %} >
+			{{ form.customername(class="form-control") }} 
+		</div>
+	</div>
+	</div>
+	<div class="row">
+	<div class = "form-group col-lg-3">
+		<label class="control-label">Enter Customer Address</label>
+		<div {% if form.customeraddress.errors %} class = "has-error" {% else %} class="" {% endif %} >
+			{{ form.customeraddress(class="form-control") }} 
+		</div>
+	</div>
+	</div>
+	<div class="row">
+	<div class = "form-group col-lg-3">
+		<label class="control-label">Enter Customer Hp</label>
+		<div {% if form.handphone.errors %} class = "has-error" {% else %} class="" {% endif %} >
+			{{ form.handphone(class="form-control") }} 
+		</div>
+	</div>
+	</div>
+	<div class="row">
+	<div class="form-group col-lg-3">
+		<label class="control-label">Enter Customer Id</label>
+		<div {% if form.customerId.errors %} class = "has-error" {% else %} class="" {% endif %} >
+			{{ form.customerId(class="form-control") }} 
+		</div>
+	</div>
+	</div>
+	<div class="row">
+	<div class = "form-group col-lg-3" >
+		<label class="control-label">Enter Date of Joining</label>
+		<div {% if form.dateofjoining.errors %} class = "has-error" {% else %} class="" {% endif %} >
+			{{ form.dateofjoining(class="form-control date") }} 
+		</div>
+	</div>
+	</div>
+	<div class="row">
+	<div class = "form-group col-lg-3">
+		<label class="control-label">Enter Password</label> 
+		<div {% if form.passwordcustomer.errors %} class = "has-error" {% else %} class="" {% endif %} >
+			{{ form.passwordcustomer(class="form-control") }}
+		</div>
+	</div>
+	</div>
+	<div class="form-group">
+		<input type="submit" value="Add Customer" class="btn">
+	</div>
 </form>
+
 {% endblock %}

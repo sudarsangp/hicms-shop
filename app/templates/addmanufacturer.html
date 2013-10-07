@@ -2,11 +2,13 @@
  
 {% block content %}
 
-<form action = "" method = post>
+<form action = "" method = post id = 1>
 	Enter Manufacturer Id
 	{{ form.manufacturerId }} <br>
 	Enter Manufacturer Name
-	{{ form.name }} <br>
+	{{ form.mname }} <br>
+	Enter is Contract Valid
+	{{ form.isContractValid}} <br>
 	
 		<input type="submit" value="Add Manufacturer">
 </form>

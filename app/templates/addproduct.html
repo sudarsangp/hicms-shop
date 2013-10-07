@@ -1,0 +1,55 @@
+{% extends "baselayout.html" %}
+ 
+{% block content %}
+
+<form action = "" method = post>
+	Enter Product Barcode
+	{{ form.barcode }} <br>
+	
+	Enter Product Name
+	{{ form.proname }} <br>
+	
+	<div id = "manu-id">
+	Enter Manufacturer Id
+	{{ form.manufacturerId}} <br>
+	</div>
+	
+	<div id="manu-form">
+	Enter Manufacturer Details
+	{{form.manufacturerForm}}<br>
+	</div>
+	
+	<div id = "cat-id">	
+	Enter Product category
+	{{ form.category }} <br>
+	</div>
+	
+	<div id = "cat-form">
+	Enter Category Details
+	{{form.categoryForm}}<br>
+	</div>
+	
+	Enter Product Price
+	{{ form.price}} <br>
+	
+	Enter minimum stock
+	{{ form.minStock }} <br>
+	
+	Enter Current Stock level  
+	{{ form.currentStock }} <br>
+	
+	Enter Bundle Unit Value
+	{{ form.bundleUnit }} <br>
+	
+	Enter display Price
+	{{ form.displayPrice }} <br>
+.	
+	Enter display Quantity
+	{{ form.displayQty }} <br>
+	
+		<input type="submit" value="Add Product">
+</form>
+
+
+<script src="{{ url_for('static',filename='js/addproduct.js') }}" type="text/javascript"></script> 
+{% endblock %}

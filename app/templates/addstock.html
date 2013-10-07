@@ -1,0 +1,20 @@
+{% extends "baselayout.html" %}
+ 
+{% block content %}
+
+<form action = "" method = "post" class="form from-horizontal">
+	
+
+	Enter Barcode &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+	{{ form.barcode }} <br>
+	Enter Serial Number 
+	{{ form.serialNumber }} <br>
+	Enter Batch Quantity
+	{{ form.batchQty }} <br>
+	On Display
+	{{ form.isOnDisplay }} <br>
+	
+	<br>
+	<input type="submit" value="Add Stock" class="btn-primary">
+</form>
+{% endblock %}

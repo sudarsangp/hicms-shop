@@ -4,14 +4,15 @@
      by the SQL-alchemy classes.
      
 '''
-from app.model.models import db, Customer,Manufacturers, Stock
+
+from app.model.models import db, Customer,Manufacturers,Category,Products, Stock
 from flask import session
 
 class StorageClass(object):
     
     def addCustomerTODatabase(self,formData):
         newCustomerData = Customer(formData.customername.data,formData.customeraddress.data,
-                                   formData.handphone.data,formData.emailid.data,formData.dateofjoining.data,
+                                   formData.handphone.data,formData.customerId.data,formData.dateofjoining.data,
                                    formData.passwordcustomer.data)
     
         db.session.add(newCustomerData)
@@ -25,8 +26,8 @@ class StorageClass(object):
 
 
     def query_database(self, formData):
-    	emailquery = Customer.query.filter_by(email = formData.emailid.data).first()
-    	if emailquery:
+    	idQuery = Customer.query.filter_by(customerId = formData.customerId.data).first()
+    	if idQuery:
     		# email already present in database
     		return False
     	else:
@@ -34,7 +35,7 @@ class StorageClass(object):
  
     def addManufacturerToDatabase(self,formData):
       #  newManufacturerData = Manufacturers(formData.manufacturerId.data, formData.name.data, formData.isContractValid.data) 
-        newManufacturerData = Manufacturers(formData.manufacturerId.data, formData.name.data, True) 
+        newManufacturerData = Manufacturers(formData.manufacturerId.data, formData.mname.data, True) 
         #isManufacturerIdPresent
         
         db.session.add(newManufacturerData) 
@@ -45,24 +46,69 @@ class StorageClass(object):
         #db.session.close()
         #return "from StorageClass"
     
-    def check_if_manufacturer_exists(self,formData):
-        manufacturer_id = Manufacturers.query.filter_by( manufacturerId = formData.manufacturerId.data).first()
+    def check_if_manufacturer_not_exists(self,newManufacturerId):
+        manufacturer_id = Manufacturers.query.filter_by( manufacturerId = newManufacturerId).first()
         
         if manufacturer_id:
             return False
         else:
             return True
-               
+    
+    def addCategoryToDatabase(self,formData):
+        newManufacturerData = Category(formData.categoryId.data, formData.categoryDescription.data,formData.isExpirable.data)
+        
+        db.session.add(newManufacturerData) 
+        db.session.commit()    
+
     def addStockToDatabase(self, formData):
-        newStockData = Stock(formData.barcode.data, formData.serialNumber.data, formData.batchQty.data, formData.isOnDisplay.data)
+        
+        #newStockData = Stock(formData.barcode.data, formData.serialNumber.data, formData.batchQty.data, formData.isOnDisplay.data)
+        #getting none when doing commit don't know why
+        newStockData = Stock(1,7,1,True)
         db.session.add(newStockData)
         db.session.commit()
 
     def check_if_stock_exists(self, formData):
-        barcodequery = Stock.query.filter_by(barcode = formData.barcode.data).first()
+       #if dropdown for serial number then no need to check
         serialNumber = Stock.query.filter_by(serialNumber = formData.serialNumber.data).first()
 
-        if barcodequery and serialNumber:
+        if serialNumber:
             return False
         else:
             return True
+
+    def check_if_category_not_exists(self,newCategoryId):
+        category_id = Category.query.filter_by( categoryId = newCategoryId).first()
+        
+        if category_id:
+            return False
+        else:
+            return True
+    
+    def addProductToDatabase(self,formData):
+        newProductData = Products(formData.barcode.data,formData.proname.data,formData.manufacturerId.data,formData.category.data,formData.price.data,
+                                  formData.minStock.data,formData.currentStock.data,formData.bundleUnit.data,formData.displayPrice.data,formData.displayQty.data)
+
+        db.session.add(newProductData) 
+        db.session.commit()  
+    
+    def check_if_Product_exists(self,formData):
+        product_id = Products.query.filter_by( barcode = formData.barcode.data).first()
+        
+        if product_id:
+            return False
+        else:
+            return True    
+    
+    def get_manufacturers_from_db(self,formData):
+        existingManufacturers = Manufacturers.query.all()
+        return existingManufacturers    
+    
+    def get_categories_from_db(self,formData):
+        existingCategories = Category.query.all()
+        return existingCategories    
+
+    def get_products_from_db(self, formData):
+        existingProduct = Products.query.all()
+        return existingProduct
+    

@@ -27,17 +27,17 @@ class AddCustomer(Command):
     		try:
     			self.storageObject.addCustomerTODatabase(formData)
     			self.feedbackObject.setinfo("Success: data added ")
-    			self.feedbackObject.setdata(formData.emailid.data)
+    			self.feedbackObject.setdata(formData.customerId.data)
     			self.feedbackObject.setcommandtype("AddCustomer")
     		except Exception as e:
     			#populate feedback with exception data
-    			self.feedbackObject.setinfo("Failed :Exception  Data cannot be added" + e)
-    			self.feedbackObject.setdata(formData.emailid.data)
+    			self.feedbackObject.setinfo("Failed :Exception  Data cannot be added")
+    			self.feedbackObject.setdata(formData.customerId.data)
     			self.feedbackObject.setcommandtype("AddCustomer")
     	else:
     		#populate feedback with cannot be added data
     		self.feedbackObject.setinfo("Failed :Duplicate present Data cannot be added")
-    		self.feedbackObject.setdata(formData.emailid.data)
+    		self.feedbackObject.setdata(formData.customerId.data)
     		self.feedbackObject.setcommandtype("AddCustomer")
     	
     	return self.feedbackObject

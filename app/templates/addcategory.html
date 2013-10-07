@@ -1,0 +1,15 @@
+{% extends "baselayout.html" %}
+ 
+{% block content %}
+
+<form action = "" method = post>
+	Enter Category Id
+	{{ form.categoryId }} <br>
+	Enter Category Description
+	{{ form.categoryDescription }} <br>
+	Enter Category Description
+	{{ form.isExpirable}} <br>
+	
+		<input type="submit" value="Add Category">
+</form>
+{% endblock %}

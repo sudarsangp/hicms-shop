@@ -10,8 +10,10 @@ Created on Sep 10, 2013
      
 '''
 from CustomerOperations import AddCustomer
-from ManufacturerOperations import AddManufacturer
 from StockOperations import AddStock
+from ManufacturerOperations import AddManufacturer,ViewManufacturers
+from CategoryOperations import AddCategory,ViewCategories
+from ProductOperations import AddProduct, ViewProduct
 
 class CommandFactory(object):
     
@@ -27,4 +29,25 @@ class CommandFactory(object):
         elif operation == "addstock":
         	addStockCommand = AddStock()
         	return addStockCommand
-    
+  
+        elif operation == "addcategory":
+            addCategoryCommand = AddCategory()
+            return addCategoryCommand
+        
+        elif operation == "addproduct":
+            addProductCommand = AddProduct()
+            return addProductCommand
+        
+        elif operation == "viewmanufacturers":
+            viewManufacturersCommand = ViewManufacturers()
+            return viewManufacturersCommand
+        
+        elif operation == "viewcategories":
+            viewCategoriesCommand = ViewCategories()
+            return viewCategoriesCommand
+
+        elif operation == "viewproducts":
+            viewProductCommand = ViewProduct()
+            return viewProductCommand
+        
+     
