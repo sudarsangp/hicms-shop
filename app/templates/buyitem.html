@@ -1,0 +1,13 @@
+{% extends "baselayout.html" %}
+ 
+{% block content %}
+
+<form action="" method = post>
+	Enter Barcode
+	{{ form.barcode }} <br>
+	Enter Quantity
+	{{ form.quantity }} <br>
+		
+	<input type="submit" value="Buy Item">
+</form>
+{% endblock %}

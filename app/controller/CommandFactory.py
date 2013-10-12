@@ -14,6 +14,7 @@ from StockOperations import AddStock
 from ManufacturerOperations import AddManufacturer,ViewManufacturers
 from CategoryOperations import AddCategory,ViewCategories
 from ProductOperations import AddProduct, ViewProduct
+from UserOperations import BuyItem
 
 class CommandFactory(object):
     
@@ -49,5 +50,9 @@ class CommandFactory(object):
         elif operation == "viewproducts":
             viewProductCommand = ViewProduct()
             return viewProductCommand
+
+        elif operation == "buyitem":
+            buyItemCommand = BuyItem()
+            return buyItemCommand
         
      

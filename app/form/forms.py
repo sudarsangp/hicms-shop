@@ -80,12 +80,17 @@ class AddStock(Form):
   barcode = SelectField('barcode', choices=[])
   serialNumber = TextField('serialNumber', validators = [validators.Required()])
   batchQty = TextField('batchQty', validators = [validators.Required()])
-  isOnDisplay = BooleanField('isOnDisplay')
+  isOnDisplay = TextField('isOnDisplay')
 
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
 
+class BuyItem(Form):
+  barcode = TextField('barcode')
+  quantity = TextField('quantity')
 
+  def __init__(self, *args, **kwargs): # needed for importing in view.py
+    Form.__init__(self, *args, **kwargs)
 ################################################################################################################################################
 class SignupForm(Form):
   firstname = TextField("First name",  [validators.Required("Please enter your first name.")])

@@ -3,7 +3,7 @@ from flask.ext.login import login_required
 from app import app, login_manager
 
 
-from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer , AddManufacturer , AddStock, AddCategory, AddProduct
+from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer ,AddManufacturer , AddStock, AddCategory, AddProduct, BuyItem
 
 from model.models import Check, User, db, Customer
 from controller import Logic
@@ -206,6 +206,17 @@ def addstock(operation):
 
   elif request.method == 'GET':
     return render_template('addstock.html', form = form)
+
+@app.route('/user', methods = ['POST', 'GET'])
+def buyitem():
+  form = BuyItem()
+  if request.method == 'POST':
+    logicObject = Logic.Logic()
+    feedback = logicObject.execute('buyitem',form)
+    return render_template('feedback.html', feedback = feedback)
+
+  elif request.method == 'GET':
+    return render_template('buyitem.html', form=form)
 
 @app.route('/defaulterror')
 def defaulterror():

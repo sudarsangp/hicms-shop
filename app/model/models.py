@@ -30,13 +30,13 @@ class Stock(db.Model):
   barcode = db.Column(db.String(256), primary_key = True)
   serialNumber = db.Column(db.String(256), primary_key = True)
   batchQty = db.Column(db.Integer)
-  isOnDisplay = db.Column(db.Boolean)
+  isOnDisplay = db.Column(db.Boolean,nullable = False)
 
-  def __init__(self, barcode, serialNumber, batchQty, isOnDsiplay):
+  def __init__(self, barcode, serialNumber, batchQty, isOnDisplay):
     self.barcode = barcode
     self.serialNumber = serialNumber
     self.batchQty = batchQty
-    self.isOnDsiplay = isOnDsiplay
+    self.isOnDisplay = isOnDisplay
 
 class Category(db.Model):
     __tablename__ = "Category"
