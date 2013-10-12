@@ -1,0 +1,28 @@
+{% extends "baselayout.html" %}
+ 
+{% block content %}
+
+<h2> Products Information Barcode </h2>
+<h4> Product Information </h5>
+Barcode
+{{ productobj.barcode }} <br>
+Name
+{{ productobj.name }} <br>
+ManufacturerID
+{{ productobj.manufacturerId }} <br>
+Category
+{{ productobj.category }} <br>
+Price
+{{ productobj.price }} <br>
+Minimum Stock
+{{ productobj.minStock }} <br>
+Current Stock
+{{ productobj.currentStock }} <br>
+Bundle Unit
+{{ productobj.bundleUnit }} <br>
+Display price
+{{ productobj.displayPrice }} <br>
+Display Quantity
+{{ productobj.displayQty }} <br>
+
+{% endblock %}

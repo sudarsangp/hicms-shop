@@ -4,6 +4,7 @@ from app import app, login_manager
 
 
 from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer ,AddManufacturer , AddStock, AddCategory, AddProduct, BuyItem
+from form.forms import SearchBarcode
 
 from model.models import Check, User, db, Customer
 from controller import Logic
@@ -79,6 +80,33 @@ def profile():
     return render_template('profile.html')
 ##############################################################################################
 
+#shop admin actual functions
+@app.route('/saoperation', methods = ['POST','GET'])
+def sa_operation():
+  form = ShopAdminFunction()
+  if request.method == "POST":
+    operation = form.operations.data
+
+    if operation == "searchBarcode":
+      return redirect(url_for('search_barcode',operation = operation))
+
+  elif request.method == 'GET':
+    return render_template('SAproduct_operation.html', form = form)
+
+@app.route('/productsearch/<operation>', methods = ['POST','GET'])
+def search_barcode(operation):
+  form = SearchBarcode()
+  if request.method == "POST":
+    logicObject = Logic.Logic()
+    productobj = logicObject.execute(operation,form)
+    if productobj:
+      return render_template('productdetailsforbarcode.html', productobj = productobj)
+    else:
+      return redirect(url_for('defaulterror'))
+
+  elif request.method == 'GET':
+    return render_template('searchbarcode.html',form = form)
+
 #for manually adding product to the database or shop
 @app.route('/product', methods = ['POST', 'GET'])
 #@login_required
@@ -87,7 +115,7 @@ def product_functions():
   if request.method ==  "POST":
     
     operation = form.operations.data
-    #add the logic object here.
+    
     if operation == "addcustomer":
       return redirect(url_for('addcustomer',operation = operation))
     
@@ -220,7 +248,7 @@ def buyitem():
 
 @app.route('/defaulterror')
 def defaulterror():
-  return "Error found"
+  return "Data not present"
 
 #to check the database part works fine
 @app.route('/db')

@@ -26,9 +26,11 @@ class RegisterShopForm(Form):
 	confirmpassword = PasswordField('confirmpassword',[validators.Required()])
 
 class ShopAdminFunction(Form):
-  operations = RadioField('operations', choices = [('addproduct','Add product'),('editproduct','Edit Product'),('removeproduct','Remove Product'),
+  operations = RadioField('operations', choices = [('searchBarcode','Search Barcode')])
+  # for testing use this /product url
+  """[('addproduct','Add product'),('editproduct','Edit Product'),('removeproduct','Remove Product'),
   ('addcustomer','Add Customer'),('editcustomer','Edit Customer'),('removecustomer','Remove Customer'),('addstock', 'Add Stock'), 
-  ('addmanufacturer','Add Manufacturer'),('addcategory','Add Category')])
+  ('addmanufacturer','Add Manufacturer'),('addcategory','Add Category')])"""
 
 
 class AddCustomer(Form):
@@ -91,6 +93,13 @@ class BuyItem(Form):
 
   def __init__(self, *args, **kwargs): # needed for importing in view.py
     Form.__init__(self, *args, **kwargs)
+
+class SearchBarcode(Form):
+  barcode = TextField('barcode')
+
+  def __init__(self, *args, **kwargs):
+    Form.__init__(self, *args, **kwargs)
+    
 ################################################################################################################################################
 class SignupForm(Form):
   firstname = TextField("First name",  [validators.Required("Please enter your first name.")])

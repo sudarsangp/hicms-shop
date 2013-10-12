@@ -118,4 +118,8 @@ class StorageClass(object):
         stockData = Stock.query.filter_by(barcode = enteredBarcode).first()
         stockData.batchQty = quantity
         db.session.commit()
+
+    def get_product_for_barcode(self,enteredBarcode):
+        existingProduct = Products.query.filter_by(barcode = enteredBarcode).first()
+        return existingProduct
     

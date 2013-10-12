@@ -17,4 +17,3 @@ class Logic(object):
          newCommand = self.newCommandFactory.createCommand(operation,formData)
          result = newCommand.execute(formData) 
          return result
-         #return "logic.execute"

@@ -13,7 +13,7 @@ from CustomerOperations import AddCustomer
 from StockOperations import AddStock
 from ManufacturerOperations import AddManufacturer,ViewManufacturers
 from CategoryOperations import AddCategory,ViewCategories
-from ProductOperations import AddProduct, ViewProduct
+from ProductOperations import AddProduct, ViewProduct, SearchProductBarcode
 from UserOperations import BuyItem
 
 class CommandFactory(object):
@@ -55,4 +55,7 @@ class CommandFactory(object):
             buyItemCommand = BuyItem()
             return buyItemCommand
         
+        elif operation == "searchBarcode":
+            searchBarcodeCommand = SearchProductBarcode()
+            return searchBarcodeCommand
      
