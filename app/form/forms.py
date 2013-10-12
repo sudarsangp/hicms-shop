@@ -80,7 +80,7 @@ class AddStock(Form):
   barcode = SelectField('barcode', choices=[])
   serialNumber = TextField('serialNumber', validators = [validators.Required()])
   batchQty = TextField('batchQty', validators = [validators.Required()])
-  isOnDisplay = TextField('isOnDisplay')
+  isOnDisplay = BooleanField('isOnDisplay')
 
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)

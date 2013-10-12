@@ -61,15 +61,8 @@ class StorageClass(object):
         db.session.commit()    
 
     def addStockToDatabase(self, formData):
-        #if formData.isOnDisplay.data :
-        #    value = 1
-        #print type(value)
-        #form_isondisplay = unicode(value)
-        #print form_isondisplay
-        newStockData = Stock(formData.barcode.data, formData.serialNumber.data, formData.batchQty.data, 1)
-        print type(formData.barcode.data), type(formData.serialNumber.data), type(formData.batchQty.data), type(formData.isOnDisplay.data)
-        #getting none when doing commit don't know why
-        #newStockData = Stock(1,7,1,True)
+        newStockData = Stock(formData.barcode.data, formData.serialNumber.data, formData.batchQty.data, formData.isOnDisplay.data)
+
         db.session.add(newStockData)
         db.session.commit()
 
