@@ -1,0 +1,39 @@
+{% extends "baselayout.html" %}
+ 
+{% block content %}
+
+<h3> All Products Information </h3>
+<h4> Table Format </h5>
+<table class="table">
+<thead>
+	<tr>
+		<th> Barcode </th>
+		<th> Name </th>
+		<th> ManufacturerID </th>
+		<th> Category </th>
+		<th> Price </th>
+		<th> Minimum Stock </th>
+		<th> Current Stock </th>
+		<th> Bundle Unit </th>
+		<th> Display price </th>
+		<th> Display Quantity </th>
+	</tr>
+</thead>
+<tbody>
+{% for productobj in allproducts %}
+<tr>
+<td>{{ productobj.barcode }} </td>
+<td>{{ productobj.name }}  </td>
+<td>{{ productobj.manufacturerId }}</td>
+<td>{{ productobj.category }} </td>
+<td>{{ productobj.price }} </td>
+<td>{{ productobj.minStock }} </td>
+<td>{{ productobj.currentStock }} </td>
+<td>{{ productobj.bundleUnit }} </td>
+<td>{{ productobj.displayPrice }} </td>
+<td>{{ productobj.displayQty }} </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+{% endblock %}

@@ -90,6 +90,9 @@ def sa_operation():
     if operation == "searchBarcode":
       return redirect(url_for('search_barcode',operation = operation))
 
+    elif operation == "viewproducts":
+      return redirect(url_for('view_all_products', operation = operation))
+
   elif request.method == 'GET':
     return render_template('SAproduct_operation.html', form = form)
 
@@ -106,6 +109,12 @@ def search_barcode(operation):
 
   elif request.method == 'GET':
     return render_template('searchbarcode.html',form = form)
+
+@app.route('/displayall/<operation>', methods = ['POST','GET'])
+def view_all_products(operation):
+  logicObject = Logic.Logic()
+  allproducts = logicObject.execute(operation, None)
+  return render_template('listinginventory.html', allproducts = allproducts)
 
 #for manually adding product to the database or shop
 @app.route('/product', methods = ['POST', 'GET'])
