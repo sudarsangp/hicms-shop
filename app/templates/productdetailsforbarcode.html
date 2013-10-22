@@ -2,27 +2,35 @@
  
 {% block content %}
 
-<h2> Products Information Barcode </h2>
-<h4> Product Information </h5>
-Barcode
-{{ productobj.barcode }} <br>
-Name
-{{ productobj.name }} <br>
-ManufacturerID
-{{ productobj.manufacturerId }} <br>
-Category
-{{ productobj.category }} <br>
-Price
-{{ productobj.price }} <br>
-Minimum Stock
-{{ productobj.minStock }} <br>
-Current Stock
-{{ productobj.currentStock }} <br>
-Bundle Unit
-{{ productobj.bundleUnit }} <br>
-Display price
-{{ productobj.displayPrice }} <br>
-Display Quantity
-{{ productobj.displayQty }} <br>
+<table class="table">
+<thead>
+	<tr>
+		<th> Barcode </th>
+		<th> Name </th>
+		<th> ManufacturerID </th>
+		<th> Category </th>
+		<th> Price </th>
+		<th> Minimum Stock </th>
+		<th> Current Stock </th>
+		<th> Bundle Unit </th>
+		<th> Display price </th>
+		<th> Display Quantity </th>
+	</tr>
+</thead>
+<tbody>
+<tr>
+	<td>{{ productobj.barcode }} </td>
+	<td>{{ productobj.name }}  </td>
+	<td>{{ productobj.manufacturerId }}</td>
+	<td>{{ productobj.category }} </td>
+	<td>{{ productobj.price }} </td>
+	<td>{{ productobj.minStock }} </td>
+	<td>{{ productobj.currentStock }} </td>
+	<td>{{ productobj.bundleUnit }}  </td>
+	<td>{{ productobj.displayPrice }}</td>
+	<td>{{ productobj.displayQty }} </td>
+</tr>
+</tbody>
+</table>
 
 {% endblock %}
