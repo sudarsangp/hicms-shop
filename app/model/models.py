@@ -36,7 +36,7 @@ class Transaction(db.Model):
   customerId = db.Column(db.String(256))
   cashierId =  db.Column(db.String(256))
   transactionDate = db.Column(db.Date,nullable = False)
-  barcode = db.Column(db.String(256),nullable = False)
+  barcode = db.Column(db.String(256),primary_key = True)
   unitSold = db.Column(db.Integer)
   soldPrice = db.Column(db.Float,nullable = False)   
   

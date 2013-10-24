@@ -150,3 +150,6 @@ class StorageClass(object):
         
         return lastTransaction.first().transactionId
     
+    def getTransactions(self):
+        transactions = Transaction.query.all()
+        return transactions

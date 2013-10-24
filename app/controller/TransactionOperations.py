@@ -26,4 +26,13 @@ class CreateTransaction(Command):
         self.feedbackObject = feedbackObject
         
         return self.feedbackObject
-         
+    
+class ListTransactions(Command):
+    
+    def __init__(self):    
+        self.storageObject = StorageClass()
+        self.feedbackObject = Feedback()
+    
+    def execute(self,formData):
+        allTransactions = self.storageObject.getTransactions()
+        return allTransactions     

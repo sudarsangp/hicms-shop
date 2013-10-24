@@ -96,6 +96,9 @@ def sa_operation():
     elif operation == "submittransaction":
       return redirect(url_for('submit_transaction', operation = operation))
 
+    elif operation == "viewproducttransactions":
+      return redirect(url_for('view_all_transactions', operation = operation))  
+    
     else:
       return "Mapping not yet implemented"
 
@@ -127,6 +130,12 @@ def view_all_products(operation):
   logicObject = Logic.Logic()
   allproducts = logicObject.execute(operation, None)
   return render_template('listinginventory.html', allproducts = allproducts)
+  
+@app.route('/productTransactionsDisplayAll/<operation>', methods = ['POST','GET'])
+def view_all_transactions(operation):
+    logicObject = Logic.Logic()
+    allTransactions = logicObject.execute(operation, None)
+    return render_template('listProductTransactions.html', allTransactions = allTransactions)   
 
 @app.route('/customer/<operation>', methods = ['POST', 'GET'])
 #@login_required

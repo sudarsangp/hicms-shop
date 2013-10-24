@@ -14,7 +14,7 @@ from ManufacturerOperations import AddManufacturer,ViewManufacturers
 from CategoryOperations import AddCategory,ViewCategories
 from ProductOperations import AddProduct, ViewProduct, SearchProductBarcode
 from UserOperations import BuyItem
-from TransactionOperations import CreateTransaction
+from TransactionOperations import CreateTransaction,ListTransactions
 from CommunicateWithHQ import UpdateHQServer
 
 
@@ -64,4 +64,8 @@ class CommandFactory(object):
         elif operation == "submittransaction":
             updateHQServerCommand = UpdateHQServer()
             return updateHQServerCommand
+        
+        elif operation == "viewproducttransactions":
+            viewTransactions = ListTransactions()
+            return viewTransactions
 
