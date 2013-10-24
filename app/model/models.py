@@ -23,20 +23,26 @@ class Customer(db.Model):
       self.password = password
 
 
-class Stock(db.Model):
+class Transaction(db.Model):
 
-  __tablename__ = "Stock"
+  __tablename__ = "Transaction"
 
-  barcode = db.Column(db.String(256), primary_key = True)
-  serialNumber = db.Column(db.String(256), primary_key = True)
-  batchQty = db.Column(db.Integer)
-  isOnDisplay = db.Column(db.Boolean,nullable = False)
-
-  def __init__(self, barcode, serialNumber, batchQty, isOnDisplay):
+  transactionId = db.Column(db.String(256), primary_key = True)
+  customerId = db.Column(db.String(256))
+  cashierId =  db.Column(db.String(256))
+  transactionDate = db.Column(db.Date,nullable = False)
+  barcode = db.Column(db.String(256),nullable = False)
+  unitSold = db.Column(db.Integer)
+  soldPrice = db.Column(db.Float,nullable = False)   
+  
+  def __init__(self, transactionId,customerId,cashierId,transactionDate,barcode,unitSold,soldPrice):
+    self.transactionId = transactionId
+    self.customerId = customerId
+    self.transactionDate = transactionDate
     self.barcode = barcode
-    self.serialNumber = serialNumber
-    self.batchQty = batchQty
-    self.isOnDisplay = isOnDisplay
+    self.unitSold = unitSold
+    self.soldPrice = soldPrice
+    self.cashierId = cashierId
 
 class Category(db.Model):
     __tablename__ = "Category"

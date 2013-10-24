@@ -15,6 +15,7 @@ from ManufacturerOperations import AddManufacturer,ViewManufacturers
 from CategoryOperations import AddCategory,ViewCategories
 from ProductOperations import AddProduct, ViewProduct, SearchProductBarcode
 from UserOperations import BuyItem
+from TransactionOperations import CreateTransaction
 
 class CommandFactory(object):
     
@@ -59,3 +60,6 @@ class CommandFactory(object):
             searchBarcodeCommand = SearchProductBarcode()
             return searchBarcodeCommand
      
+        elif operation == "hwImitateBuy":
+            makeTransaction = CreateTransaction()
+            return makeTransaction

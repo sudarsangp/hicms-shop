@@ -141,3 +141,13 @@ class SigninForm(Form):
       self.email.errors.append("Invalid e-mail or password")
       return False
 #####################################################################################################################################################
+
+class HardwareImitater(Form):
+    
+    transactionDate =  TextField('transactionDate')
+    cashierId = TextField('cashierId')
+    customerId = TextField('customerId')
+    barcode = TextField('barcode')
+    
+    def __init__(self, *args, **kwargs): # needed for importing in view.py
+        Form.__init__(self, *args, **kwargs)

@@ -3,11 +3,11 @@ from flask.ext.login import login_required
 from app import app, login_manager
 
 
-from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer ,AddManufacturer , AddStock, AddCategory, AddProduct, BuyItem
+from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer ,AddManufacturer , AddStock, AddCategory, AddProduct, BuyItem, HardwareImitater
 from form.forms import SearchBarcode
 
 from model.models import Check, User, db, Customer
-from controller import Logic
+from controller import Logic,InterfaceForPos
 
 @app.route('/check')
 def default():
@@ -225,25 +225,6 @@ def addproduct(operation):
 		return render_template('addproduct.html', form = form)
 	
 	
-@app.route('/stockadd/<operation>', methods = ['POST', 'GET'])
-#@login_required
-def addstock(operation):
-
-  logicObject = Logic.Logic()
-  products = logicObject.execute('viewproducts', None)
-  product_choices = [(prod.barcode,prod.barcode) for prod in products]
-  product_choices.append(('-1','None'))
-
-  form = AddStock()
-  form.barcode.choices = product_choices
-  if request.method == 'POST':
-    
-    feedback = logicObject.execute(operation, form)
-    return render_template('feedback.html', feedback = feedback)
-
-  elif request.method == 'GET':
-    return render_template('addstock.html', form = form)
-
 @app.route('/user', methods = ['POST', 'GET'])
 def buyitem():
   form = BuyItem()
@@ -265,4 +246,20 @@ def db_check():
 	checkdb = Check()
 	return checkdb.check_id()
 
-  
+@app.route('/hardwareImitater', methods = ['POST', 'GET'])
+def hardwareImitater():
+	form = HardwareImitater()
+	if request.method == "POST":
+		# parse the data
+		dummyPosInterface = InterfaceForPos.InterfaceForPos()
+		newBarcodeQtyDict =  dummyPosInterface.parseForSoftwareImitater(form) 
+ 		
+ 		# provide the form with dictionary as a parameter to the execute method
+ 		logicObject = Logic.Logic()
+ 		form.barcode.data = newBarcodeQtyDict
+ 		feedback = logicObject.execute('hwImitateBuy',form)
+ 		return render_template('feedback.html', feedback = feedback)
+
+		
+	elif request.method == 'GET':
+		return render_template('hardwareImitater.html',form = form)  
