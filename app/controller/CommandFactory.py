@@ -10,12 +10,13 @@ Created on Sep 10, 2013
      
 '''
 from CustomerOperations import AddCustomer
-from StockOperations import AddStock
 from ManufacturerOperations import AddManufacturer,ViewManufacturers
 from CategoryOperations import AddCategory,ViewCategories
 from ProductOperations import AddProduct, ViewProduct, SearchProductBarcode
 from UserOperations import BuyItem
 from TransactionOperations import CreateTransaction
+from CommunicateWithHQ import UpdateHQServer
+
 
 class CommandFactory(object):
     
@@ -27,10 +28,6 @@ class CommandFactory(object):
         elif operation == "addmanufacturer":
             addManufacturerCommand = AddManufacturer()
             return addManufacturerCommand
-
-        elif operation == "addstock":
-        	addStockCommand = AddStock()
-        	return addStockCommand
   
         elif operation == "addcategory":
             addCategoryCommand = AddCategory()
@@ -63,3 +60,8 @@ class CommandFactory(object):
         elif operation == "hwImitateBuy":
             makeTransaction = CreateTransaction()
             return makeTransaction
+        
+        elif operation == "submittransaction":
+            updateHQServerCommand = UpdateHQServer()
+            return updateHQServerCommand
+

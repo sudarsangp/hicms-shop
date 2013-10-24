@@ -5,6 +5,7 @@
      
 '''
 
+
 from app.model.models import db, Customer,Manufacturers,Category,Products,Transaction
 from Feedback import Feedback
 from flask import session
@@ -41,15 +42,10 @@ class StorageClass(object):
     def addManufacturerToDatabase(self,formData):
       #  newManufacturerData = Manufacturers(formData.manufacturerId.data, formData.name.data, formData.isContractValid.data) 
         newManufacturerData = Manufacturers(formData.manufacturerId.data, formData.mname.data, True) 
-        #isManufacturerIdPresent
         
         db.session.add(newManufacturerData) 
         db.session.commit()
-        # need to check if data is being added to database automatically
-        #db.session.flush()
-        #db.session.refresh(newCustomerData)
-        #db.session.close()
-        #return "from StorageClass"
+
     
     def check_if_manufacturer_not_exists(self,newManufacturerId):
         manufacturer_id = Manufacturers.query.filter_by( manufacturerId = newManufacturerId).first()
@@ -64,21 +60,6 @@ class StorageClass(object):
         
         db.session.add(newManufacturerData) 
         db.session.commit()    
-
-    def addStockToDatabase(self, formData):
-        newStockData = Stock(formData.barcode.data, formData.serialNumber.data, formData.batchQty.data, formData.isOnDisplay.data)
-
-        db.session.add(newStockData)
-        db.session.commit()
-
-    def check_if_stock_exists(self, formData):
-       #if dropdown for serial number then no need to check
-        serialNumber = Stock.query.filter_by(serialNumber = formData.serialNumber.data).first()
-
-        if serialNumber:
-            return False
-        else:
-            return True
 
     def check_if_category_not_exists(self,newCategoryId):
         category_id = Category.query.filter_by( categoryId = newCategoryId).first()

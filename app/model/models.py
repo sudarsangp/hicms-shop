@@ -20,8 +20,13 @@ class Customer(db.Model):
       self.customerId = customerId
       self.dateOfJoining = dateOfJoining
       self.points = 0
-      self.password = password
+      self.password = set_password(password)
 
+  def set_password(self, password):
+    self.pwdhash = generate_password_hash(password)
+   
+  def check_password(self, password):
+    return check_password_hash(self.pwdhash, password)    
 
 class Transaction(db.Model):
 
@@ -95,9 +100,25 @@ class Products(db.Model):
        self.bundleUnit = bundleUnit
        self.displayPrice = displayPrice
        self.displayQty = displayQty
-       
 
-""" nets tuts tutorial flask login """
+class Cashiers(db.Model):
+  __tablename__ = "Cashiers"
+  cashierId = db.Column(db.String(256), primary_key = True)
+  description = db.Column(db.String(256))
+
+  def __init__(self,cashierId, description):
+    self.cashierId = cashierId
+    self.description = description
+
+class PriceDisplay(db.Model):
+  __tablename__ = 'pricedisplay'
+  priceDisplayId = db.Column(db.String(256), primary_key = True)
+  barcode = db.Column(db.String(256))
+
+  def __init__(self, priceDisplayId, barcode):
+    self.priceDisplayId = priceDisplayId
+    self.barcode = barcode
+
 class User(db.Model):
   __tablename__ = 'users'
   uid = db.Column(db.Integer, primary_key = True)
@@ -117,24 +138,6 @@ class User(db.Model):
    
   def check_password(self, password):
     return check_password_hash(self.pwdhash, password)
-
-""" this one from flask documentation """
-#class User(db.Model):
-#	id = db.Column(db.Integer, primary_key = True)
-#	name = db.Column(db.String(64), index = True, unique = True)
-#	
-#	def is_authenticated(self):
-#		return True
-#
-#	def is_active(self):
-#		return True
-#
-#	def is_anonymous(self):
-#		return False
-#
-#	def get_id(self):
-#		return unicode(self.id)
-
 
 """ to ensure whetehr database connection works """
 class Check(db.Model):

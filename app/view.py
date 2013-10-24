@@ -1,9 +1,9 @@
-from flask import render_template, flash, request, session, redirect, url_for
+from flask import render_template, flash, request, session, redirect, url_for, jsonify, abort, make_response
 from flask.ext.login import login_required
 from app import app, login_manager
 
+from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer ,AddManufacturer , AddCategory, AddProduct, BuyItem, HardwareImitater
 
-from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer ,AddManufacturer , AddStock, AddCategory, AddProduct, BuyItem, HardwareImitater
 from form.forms import SearchBarcode
 
 from model.models import Check, User, db, Customer
@@ -52,7 +52,7 @@ def signin():
       return render_template('signin.html', form=form)
     else:
       session['email'] = form.email.data
-      return redirect(url_for('product_functions'))
+      return redirect(url_for('sa_operation'))
                  
   elif request.method == 'GET':
     return render_template('signin.html', form=form) 
@@ -93,8 +93,20 @@ def sa_operation():
     elif operation == "viewproducts":
       return redirect(url_for('view_all_products', operation = operation))
 
+    elif operation == "submittransaction":
+      return redirect(url_for('submit_transaction', operation = operation))
+
+    else:
+      return "Mapping not yet implemented"
+
   elif request.method == 'GET':
     return render_template('SAproduct_operation.html', form = form)
+
+@app.route('/transaction/<operation>', methods = ['POST', 'GET'])
+def submit_transaction(operation):
+  logicObject = Logic.Logic()
+  feedback = logicObject.execute(operation,None)
+  return render_template('feedback.html', feedback = feedback)
 
 @app.route('/productsearch/<operation>', methods = ['POST','GET'])
 def search_barcode(operation):
@@ -116,43 +128,13 @@ def view_all_products(operation):
   allproducts = logicObject.execute(operation, None)
   return render_template('listinginventory.html', allproducts = allproducts)
 
-#for manually adding product to the database or shop
-@app.route('/product', methods = ['POST', 'GET'])
-#@login_required
-def product_functions():
-  form = ShopAdminFunction()
-  if request.method ==  "POST":
-    
-    operation = form.operations.data
-    
-    if operation == "addcustomer":
-      return redirect(url_for('addcustomer',operation = operation))
-    
-    elif operation == "addmanufacturer":
-      return redirect(url_for('addmanufacturer',operation = operation))
-    
-    elif operation == "addstock":
-      return redirect(url_for('addstock',operation = operation)) 
-
-    elif operation == "addcategory":
-      return redirect(url_for('addcategory',operation = operation))	
-    
-    elif operation == "addproduct":
-      return redirect(url_for('addproduct',operation = operation))
-    	
-    else:
-      return redirect(url_for('defaulterror')) 
-
-  elif request.method == 'GET':
-    return render_template('SAproduct_operation.html',form=form)
-
 @app.route('/customer/<operation>', methods = ['POST', 'GET'])
 #@login_required
 def addcustomer(operation):
  
   form = AddCustomer()
-  if request.method ==  "POST" and form.validate():
-  
+  if request.method ==  "POST": #and form.validate():
+    #print "check"
     logicObject = Logic.Logic()
     feedback = logicObject.execute(operation,form)
     return render_template('feedback.html', feedback = feedback)
@@ -223,7 +205,6 @@ def addproduct(operation):
 	
 	elif request.method == 'GET':
 		return render_template('addproduct.html', form = form)
-	
 	
 @app.route('/user', methods = ['POST', 'GET'])
 def buyitem():
