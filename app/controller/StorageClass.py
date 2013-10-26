@@ -153,3 +153,15 @@ class StorageClass(object):
     def getTransactions(self):
         transactions = Transaction.query.all()
         return transactions
+
+    def getPriceDisplayByID(self, givenID):
+        priceDisplay = PriceDisplay.query.filter(givenID == priceDisplayId)
+        return priceDisplay
+
+    def getPriceDisplayByBarcode(self, givenBarcode):
+        priceDisplay = PriceDisplay.query.filter(givenBarcode == barcode)
+        return priceDisplay
+
+    def getAllPriceDisplay(self, formData):
+        priceDisplay = PriceDisplay.query.all()
+        return priceDisplay

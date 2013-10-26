@@ -2,6 +2,9 @@ from Command import Command
 from StorageClass import StorageClass
 from Feedback import Feedback
 
+from app.model.models import db,Products, Transaction
+from sqlalchemy.sql import func
+
 import datetime
 import json
 
@@ -43,19 +46,20 @@ class ListTransactions(Command):
 class ToJson(object):
     def __init__(self):
         self.storageObject = StorageClass()
+        
 
     def retJSON(self):
         list1 = list()
         list2 = list()
 
-        for row in session.query(Products).all():
+        for row in db.session.query(Products).all():
             temp = row.currentStock + row.displayQty
-            data_stock = {'Barcode' : row.barcode , 'ShopId' : '5' , 'Stock' : temp}
+            data_stock = {'Barcode' : row.barcode , 'ShopId' : '5' , 'Stock' : str(temp)}
             list1.append(data_stock)
-        for row1 in session.query(Products),all():
-            temp1 = session.query(func.avg(Products.price)).filter(Products.barcode = row1.barcode)
-            temp2 = session.query(Transaction.unitSold).filter(Transaction.barcode = row1.barcode and Transaction.transactionDate = datetime.datetime.now().date())
-            data_soldstock = {'Barcode' : row1.barcode, 'priceSold' : temp1, 'unitSold' : temp2, 'ShopId' : '5'}
+        for row1 in db.session.query(Products).all():
+            temp1 = db.session.query(func.avg(Products.price)).filter(Products.barcode == row1.barcode).scalar()
+            temp2 = db.session.query(func.sum(Transaction.unitSold)).filter(Transaction.barcode == row1.barcode and Transaction.transactionDate == datetime.datetime.now().date()).scalar()
+            data_soldstock = {'Barcode' : row1.barcode, 'priceSold' : str(temp1), 'unitSold' : str(temp2), 'ShopId' : '5'}
             list2.append(data_soldstock)
 
         final_json = {'Stock' : list1, 'SoldStock' : list2}
