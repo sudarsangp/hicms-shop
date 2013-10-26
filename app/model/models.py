@@ -26,7 +26,28 @@ class Customer(db.Model):
     self.pwdhash = generate_password_hash(password)
    
   def check_password(self, password):
-    return check_password_hash(self.pwdhash, password)
+    return check_password_hash(self.pwdhash, password)    
+
+class Transaction(db.Model):
+
+  __tablename__ = "Transaction"
+
+  transactionId = db.Column(db.String(256), primary_key = True)
+  customerId = db.Column(db.String(256))
+  cashierId =  db.Column(db.String(256))
+  transactionDate = db.Column(db.Date,nullable = False)
+  barcode = db.Column(db.String(256),primary_key = True)
+  unitSold = db.Column(db.Integer)
+  soldPrice = db.Column(db.Float,nullable = False)   
+  
+  def __init__(self, transactionId,customerId,cashierId,transactionDate,barcode,unitSold,soldPrice):
+    self.transactionId = transactionId
+    self.customerId = customerId
+    self.transactionDate = transactionDate
+    self.barcode = barcode
+    self.unitSold = unitSold
+    self.soldPrice = soldPrice
+    self.cashierId = cashierId
 
 class Category(db.Model):
     __tablename__ = "Category"
@@ -88,27 +109,6 @@ class Cashiers(db.Model):
   def __init__(self,cashierId, description):
     self.cashierId = cashierId
     self.description = description
-
-class Transaction(db.Model):
-
-  __tablename__ = "Transaction"
-
-  transactionId = db.Column(db.String(256), primary_key = True)
-  customerId = db.Column(db.String(256))
-  cashierId =  db.Column(db.String(256))
-  transactionDate = db.Column(db.Date,nullable = False)
-  barcode = db.Column(db.String(256),nullable = False)
-  unitSold = db.Column(db.Integer)
-  soldPrice = db.Column(db.Float,nullable = False)   
-  
-  def __init__(self, transactionId,customerId,cashierId,transactionDate,barcode,unitSold,soldPrice):
-    self.transactionId = transactionId
-    self.customerId = customerId
-    self.transactionDate = transactionDate
-    self.barcode = barcode
-    self.unitSold = unitSold
-    self.soldPrice = soldPrice
-    self.cashierId = cashierId
 
 class PriceDisplay(db.Model):
   __tablename__ = 'pricedisplay'

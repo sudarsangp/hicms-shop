@@ -1,0 +1,26 @@
+{% extends "baselayout.html" %}
+ 
+{% block content %}
+Hardware Imitater<br><br>
+
+
+<form action="" method = post>
+	Enter Transaction date
+	{{form.transactionDate}} <br>
+	
+	Enter Cashier Id 
+	{{form.cashierId}} <br>
+	
+	Enter Customer Id 
+	{{form.customerId}} <br>
+	
+	Enter Barcode and Quantity  
+	{{ form.barcode }} <br>
+
+		
+	<input type="submit" value="Buy Item">
+</form>
+
+(comma to separate barcode, quantity and semicolon to separate products)
+
+{% endblock %}

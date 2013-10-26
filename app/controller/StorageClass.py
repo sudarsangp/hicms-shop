@@ -5,10 +5,16 @@
      
 '''
 
-from app.model.models import db, Customer,Manufacturers,Category,Products
+
+from app.model.models import db, Customer,Manufacturers,Category,Products,Transaction
+from Feedback import Feedback
 from flask import session
+from sqlalchemy import desc
 
 class StorageClass(object):
+    
+    def __init__(self):
+        self.storageFeedback = Feedback()
     
     def addCustomerTODatabase(self,formData):
         newCustomerData = Customer(formData.customername.data,formData.customeraddress.data,
@@ -90,7 +96,60 @@ class StorageClass(object):
         existingProduct = Products.query.all()
         return existingProduct
 
+    def get_stock_quantity_for_barcode(self, enteredBarcode):
+#         stockData = Stock.query.filter_by(barcode = enteredBarcode).first()
+        productData = Products.query.filter_by(barcode = enteredBarcode).first()    
+        return productData.currentStock
+        
+    def set_stock_quantity_for_barcode(self, enteredBarcode, quantity):
+#         stockData = Stock.query.filter_by(barcode = enteredBarcode).first()
+#         stockData.batchQty = quantity
+        productData = Products.query.filter_by(barcode = enteredBarcode).first()
+        productData.currentStock = quantity
+        db.session.commit()
+    
+    def buyProducts(self,barcodeQuantityDict,transactionId,customerId,cashierId,transactionDate):
+        for enteredBarcode in barcodeQuantityDict.iterkeys():
+            productData = Products.query.filter_by(barcode = enteredBarcode).first()
+            soldPrice = productData.displayPrice
+            purchaseQty = long(barcodeQuantityDict[enteredBarcode])
+            
+            if(purchaseQty > productData.displayQty):
+                self.storageFeedback.setinfo("Quantity in shelf less than quantity requested" + productData.name + "Transaction Did not occur ")
+                self.storageFeedback.setexecutionstatus(False)
+                return self.storageFeedback
+            
+            productData.displayQty = productData.displayQty - purchaseQty  
+            newTransaction = Transaction(transactionId,customerId,cashierId,transactionDate, enteredBarcode, barcodeQuantityDict[enteredBarcode], soldPrice)
+            db.session.add(newTransaction)
+            print transactionId
+                
+        db.session.commit()
+        self.storageFeedback.setinfo("Transaction Successfully Completed ")
+        self.storageFeedback.setexecutionstatus(True)
+        return self.storageFeedback    
+    
+    def get_display_price(self,barcode):
+        productDisplayPrice = self.get_product_for_barcode(barcode).first().displayPrice
+        return productDisplayPrice    
+            
     def get_product_for_barcode(self,enteredBarcode):
         existingProduct = Products.query.filter_by(barcode = enteredBarcode).first()
         return existingProduct
     
+    def getLastTransactionNo(self):
+        lastTransaction = Transaction.query.order_by(db.cast(Transaction.transactionId,db.BigInteger).desc())
+        
+#         y = 0
+#         for x in lastTransaction:
+#             print lastTransaction[y].transactionId
+#             y = y + 1
+            
+        if lastTransaction.first() is None:
+            return 0
+        
+        return lastTransaction.first().transactionId
+    
+    def getTransactions(self):
+        transactions = Transaction.query.all()
+        return transactions
