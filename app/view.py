@@ -8,6 +8,9 @@ from form.forms import SearchBarcode
 from model.models import Check, User, db, Customer
 from controller import Logic
 
+import json
+from ast import literal_eval
+
 @app.route('/check')
 def default():
 	return render_template("baselayout.html")
@@ -161,3 +164,50 @@ def defaulterror():
 def db_check():
 	checkdb = Check()
 	return checkdb.check_id()
+
+@app.route('/shopserverinfo', methods = ['POST']) 
+def shop_server_info():
+  fromhq = request.data
+  alldata = json.loads(fromhq)
+  alldetails = alldata['update']
+  del alldetails[0]
+  #print type(productdetails[0])
+  parsed_product_list = []
+  edit_product_list = []
+  for i in range(len(alldetails)):
+    common_dict = literal_eval(alldetails[i])
+    if 'addproducts' in common_dict:
+      parsed_product_list.append(common_dict['addproducts'])
+    elif 'editproducts' in common_dict:
+      edit_product_list.append(common_dict['editproducts'])
+
+  logicObject = Logic.Logic()
+  form = AddProduct()
+  for i in range(len(parsed_product_list)):
+    list_of_products = literal_eval(json.dumps(parsed_product_list[i]))
+    form.barcode.data = list_of_products['barcode']
+    form.proname.data = list_of_products['proname']
+    form.manufacturerId.data = list_of_products['manufacturerId']
+    form.category.data = list_of_products['category']
+    form.price.data = list_of_products['price']
+    form.minStock.data = list_of_products['minStock']
+    #change this one
+    form.currentStock.data = 0
+    form.bundleUnit.data = list_of_products['bundleUnit']
+    # change these two
+    form.displayPrice.data = 0
+    form.displayQty.data = 0
+    feedback = logicObject.execute("addproduct",form)
+  
+  for i in range(len(edit_product_list)):
+    edit_list_of_products = literal_eval(json.dumps(edit_product_list[i]))
+    form.barcode.data = edit_list_of_products['barcode']
+    form.price.data = edit_list_of_products['price']
+    form.minStock.data = edit_list_of_products['minStock']
+    form.bundleUnit.data = edit_list_of_products['bundleUnit']
+    feedback = logicObject.execute("updateproduct",form)
+ 
+  #check case when produc list exists provide some feedback
+  
+  return str(fromhq)
+  

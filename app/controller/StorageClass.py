@@ -93,4 +93,12 @@ class StorageClass(object):
     def get_product_for_barcode(self,enteredBarcode):
         existingProduct = Products.query.filter_by(barcode = enteredBarcode).first()
         return existingProduct
+
+    def set_product_details(self, formData):
+
+        updateproduct = Products.query.filter_by(barcode = formData.barcode.data).first()
+        updateproduct.price = formData.price.data
+        updateproduct.minStock = formData.minStock.data
+        updateproduct.bundleUnit = formData.bundleUnit.data
+        db.session.commit()
     
