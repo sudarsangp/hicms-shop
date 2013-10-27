@@ -27,7 +27,7 @@ class RegisterShopForm(Form):
 
 class ShopAdminFunction(Form):
   operations = RadioField('operations', choices = [('searchBarcode','Search Barcode'),('viewproducts','View Product'),('submittransaction','Submit Transaction'),
-  ('retrieveserverinformation','Retrieve Server Information')])
+  ('retrieveserverinformation','Retrieve Server Information'),('viewproducttransactions','View Transactions')])
   # for testing use this /product url
   """[('addproduct','Add product'),('editproduct','Edit Product'),('removeproduct','Remove Product'),
   ('addcustomer','Add Customer'),('editcustomer','Edit Customer'),('removecustomer','Remove Customer'),('addstock', 'Add Stock'), 
@@ -133,3 +133,13 @@ class SigninForm(Form):
       self.email.errors.append("Invalid e-mail or password")
       return False
 #####################################################################################################################################################
+
+class HardwareImitater(Form):
+    
+    transactionDate =  TextField('transactionDate')
+    cashierId = TextField('cashierId')
+    customerId = TextField('customerId')
+    barcode = TextField('barcode')
+    
+    def __init__(self, *args, **kwargs): # needed for importing in view.py
+        Form.__init__(self, *args, **kwargs)

@@ -2,11 +2,12 @@ from flask import render_template, flash, request, session, redirect, url_for, j
 from flask.ext.login import login_required
 from app import app, login_manager
 
-from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer ,AddManufacturer , AddCategory, AddProduct, BuyItem
+from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer ,AddManufacturer , AddCategory, AddProduct, BuyItem, HardwareImitater
+
 from form.forms import SearchBarcode
 
 from model.models import Check, User, db, Customer
-from controller import Logic
+from controller import Logic,InterfaceForPos
 
 import json
 from ast import literal_eval
@@ -98,6 +99,9 @@ def sa_operation():
     elif operation == "submittransaction":
       return redirect(url_for('submit_transaction', operation = operation))
 
+    elif operation == "viewproducttransactions":
+      return redirect(url_for('view_all_transactions', operation = operation))  
+    
     else:
       return "Mapping not yet implemented"
 
@@ -129,6 +133,12 @@ def view_all_products(operation):
   logicObject = Logic.Logic()
   allproducts = logicObject.execute(operation, None)
   return render_template('listinginventory.html', allproducts = allproducts)
+  
+@app.route('/productTransactionsDisplayAll/<operation>', methods = ['POST','GET'])
+def view_all_transactions(operation):
+    logicObject = Logic.Logic()
+    allTransactions = logicObject.execute(operation, None)
+    return render_template('listProductTransactions.html', allTransactions = allTransactions)   
 
 @app.route('/customer/<operation>', methods = ['POST', 'GET'])
 #@login_required
@@ -144,6 +154,70 @@ def addcustomer(operation):
   else:
    return render_template('addcustomer.html', form = form)
 
+@app.route('/manufacturer/<operation>', methods = ['POST', 'GET'])
+#@login_required    
+def addmanufacturer(operation):
+	
+	form = AddManufacturer()
+	if request.method == "POST":
+	
+		logicObject = Logic.Logic()
+		feedback = logicObject.execute(operation,form)
+		return render_template('feedback.html',feedback = feedback)
+	
+	elif request.method == 'GET':
+		return render_template('addmanufacturer.html', form = form)	
+
+@app.route('/category/<operation>', methods = ['POST', 'GET'])
+#@login_required
+def addcategory(operation):
+	
+	form = AddCategory()
+	if request.method == "POST":
+	
+		logicObject = Logic.Logic()
+		feedback = logicObject.execute(operation,form)
+		return render_template('feedback.html',feedback = feedback)
+	
+	elif request.method == 'GET':
+		return render_template('addcategory.html', form = form)	
+	
+@app.route('/productadd/<operation>', methods = ['POST', 'GET'])
+#@login_required    
+def addproduct(operation):
+	
+	logicObject = Logic.Logic()
+	manufacturers = logicObject.execute('viewmanufacturers',None)
+	manufacturer_choices = [(manufacturer.manufacturerId,manufacturer.name) for manufacturer in manufacturers]
+	manufacturer_choices.append(('-1','None'))
+	categories = logicObject.execute('viewcategories',None)
+	category_choices =[(category.categoryId,category.categoryDescription) for category in categories]
+	category_choices.append(('-1','None'))
+	
+	form = AddProduct()	
+	form.manufacturerId.choices = manufacturer_choices
+	form.category.choices = category_choices
+	if request.method == "POST":
+		if(form.manufacturerId.data == '-1'):
+			form.manufacturerId.data = form.manufacturerForm.manufacturerId.data
+			feedback = logicObject.execute('addmanufacturer',form.manufacturerForm)
+			if(feedback.getinfo() != "Success: data added "):
+				return render_template('feedback.html',feedback = feedback)
+		
+		if(form.category.data == '-1'):
+			form.category.data = form.categoryForm.categoryId.data	
+			feedback = logicObject.execute('addcategory',form.categoryForm)
+			if(feedback.getinfo() != "Success: data added "):
+				return render_template('feedback.html',feedback = feedback)	
+		
+		
+		feedback = logicObject.execute(operation,form)
+		
+		return render_template('feedback.html',feedback = feedback)
+	
+	elif request.method == 'GET':
+		return render_template('addproduct.html', form = form)
+	
 @app.route('/user', methods = ['POST', 'GET'])
 def buyitem():
   form = BuyItem()
@@ -174,12 +248,16 @@ def shop_server_info():
   #print type(productdetails[0])
   parsed_product_list = []
   edit_product_list = []
+  delete_product_list = []
+
   for i in range(len(alldetails)):
     common_dict = literal_eval(alldetails[i])
     if 'addproducts' in common_dict:
       parsed_product_list.append(common_dict['addproducts'])
     elif 'editproducts' in common_dict:
       edit_product_list.append(common_dict['editproducts'])
+    elif 'deleteproducts' in common_dict:
+      delete_product_list.append(common_dict['deleteproducts'])
 
   logicObject = Logic.Logic()
   form = AddProduct()
@@ -206,8 +284,30 @@ def shop_server_info():
     form.minStock.data = edit_list_of_products['minStock']
     form.bundleUnit.data = edit_list_of_products['bundleUnit']
     feedback = logicObject.execute("updateproduct",form)
- 
+
+  for i in range(len(delete_product_list)):
+    delete_list_of_products = literal_eval(json.dumps(delete_product_list[i]))
+    form.barcode.data = delete_list_of_products['barcode']
+    feedback = logicObject.execute("deleteproduct",form)
   #check case when produc list exists provide some feedback
   
   return str(fromhq)
   
+@app.route('/hardwareImitater', methods = ['POST', 'GET'])
+def hardwareImitater():
+	form = HardwareImitater()
+	if request.method == "POST":
+		# parse the data
+		dummyPosInterface = InterfaceForPos.InterfaceForPos()
+		newBarcodeQtyDict =  dummyPosInterface.parseForSoftwareImitater(form) 
+ 		
+ 		# provide the form with dictionary as a parameter to the execute method
+ 		logicObject = Logic.Logic()
+ 		form.barcode.data = newBarcodeQtyDict
+ 		feedback = logicObject.execute('hwImitateBuy',form)
+ 		return render_template('feedback.html', feedback = feedback)
+
+		
+	elif request.method == 'GET':
+		return render_template('hardwareImitater.html',form = form)  
+
