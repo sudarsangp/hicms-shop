@@ -8,8 +8,9 @@ from form.forms import SearchBarcode
 
 from model.models import Check, User, db, Customer
 from controller import Logic,InterfaceForPos
+from controller.Feedback import Feedback
 
-import json
+import json, requests
 from ast import literal_eval
 
 @app.route('/check')
@@ -102,6 +103,9 @@ def sa_operation():
     elif operation == "viewproducttransactions":
       return redirect(url_for('view_all_transactions', operation = operation))  
     
+    elif operation == "retrieveserverinformation":
+      return redirect(url_for("shop_server_info"))
+
     else:
       return "Mapping not yet implemented"
 
@@ -239,11 +243,21 @@ def db_check():
 	checkdb = Check()
 	return checkdb.check_id()
 
-@app.route('/shopserverinfo', methods = ['POST']) 
+@app.route('/shopserverinfo', methods = ['POST','GET']) 
 def shop_server_info():
-  fromhq = request.data
-  alldata = json.loads(fromhq)
+  #fromhq = request.data
+  fromhq = requests.get('http://127.0.0.1:5000/download')
+  #alldata = json.loads(fromhq)
+  alldata = fromhq.json()
+  feedback = Feedback()
+
   alldetails = alldata['update']
+  if alldetails == 'No file':
+    feedback.setinfo("No File")
+    feedback.setdata("Empty")
+    feedback.setcommandtype('update')
+    return render_template('feedback.html', feedback = feedback)
+
   del alldetails[0]
   #print type(productdetails[0])
   parsed_product_list = []
@@ -290,8 +304,10 @@ def shop_server_info():
     form.barcode.data = delete_list_of_products['barcode']
     feedback = logicObject.execute("deleteproduct",form)
   #check case when produc list exists provide some feedback
-  
-  return str(fromhq)
+  feedback.setinfo("Success")
+  feedback.setdata(alldata)
+  feedback.setcommandtype('update')
+  return render_template('feedback.html', feedback  = feedback)
   
 @app.route('/hardwareImitater', methods = ['POST', 'GET'])
 def hardwareImitater():
