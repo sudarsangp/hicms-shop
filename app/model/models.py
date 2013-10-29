@@ -111,7 +111,7 @@ class Cashiers(db.Model):
     self.description = description
 
 class PriceDisplay(db.Model):
-  __tablename__ = 'pricedisplay'
+  __tablename__ = 'PriceDisplay'
   priceDisplayId = db.Column(db.String(256), primary_key = True)
   barcode = db.Column(db.String(256))
 

@@ -16,6 +16,7 @@ from ProductOperations import AddProduct, ViewProduct, SearchProductBarcode
 from UserOperations import BuyItem
 from TransactionOperations import CreateTransaction,ListTransactions
 from CommunicateWithHQ import UpdateHQServer
+from PriceDisplay import ListPDUById
 
 
 class CommandFactory(object):
@@ -68,4 +69,8 @@ class CommandFactory(object):
         elif operation == "viewproducttransactions":
             viewTransactions = ListTransactions()
             return viewTransactions
+
+        elif operation == "viewpdubyid":
+            viewPduById = ListPDUById()
+            return viewPduById
 

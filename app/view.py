@@ -2,7 +2,7 @@ from flask import render_template, flash, request, session, redirect, url_for, j
 from flask.ext.login import login_required
 from app import app, login_manager
 
-from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer ,AddManufacturer , AddCategory, AddProduct, BuyItem, HardwareImitater
+from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer ,AddManufacturer , AddCategory, AddProduct, BuyItem, HardwareImitater, SearchPDUId
 
 from form.forms import SearchBarcode
 
@@ -98,6 +98,9 @@ def sa_operation():
 
     elif operation == "viewproducttransactions":
       return redirect(url_for('view_all_transactions', operation = operation))  
+
+    elif operation == "viewpdubyid":
+      return redirect(url_for('pdudisplaybyid', operation = operation))
     
     else:
       return "Mapping not yet implemented"
@@ -253,3 +256,32 @@ def hardwareImitater():
 		
 	elif request.method == 'GET':
 		return render_template('hardwareImitater.html',form = form)  
+
+#@app.route('/pdudisplaybybarcode/<operation>', methods = ['POST,GET]'])
+#def pdudisplaybybarcode():
+#      form =  SearchPDUBarcode()
+#      if request.method == "POST":
+#          logicObject = Logic.Logic()
+#          pduObj = logicObject.execute(operation, form)
+#
+#          if pduObj:
+  #          return render_template('pdudetailsforbarcode.html', pduObj = pduObj)
+  #        else :
+ #           return redirect(url_for('defaulterror'))
+ #     elif request.method == "GET" :
+
+ #         return render_template('searchpdubarcode.html', form = form)
+
+@app.route('/pdudisplaybyid/<operation>', methods = ['POST','GET'])
+def pdudisplaybyid(operation):
+      form = SearchPDUId()
+      if request.method == "POST":
+        logicObject = Logic.Logic()
+        pduObj = logicObject.execute(operation,form)
+
+        if pduObj:
+          return render_template('pdudetailsforid.html', pduObj = pduObj)
+        else:
+          return redirect(url_for('defaulterror'))
+      elif request.method == "GET" :
+        return render_template('searchpdubyid.html', form = form)
