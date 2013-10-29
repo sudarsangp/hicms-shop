@@ -10,6 +10,7 @@ from app.model.models import db, Customer,Manufacturers,Category,Products,Transa
 from Feedback import Feedback
 from flask import session
 from sqlalchemy import desc
+from sqlalchemy.exc import IntegrityError
 
 class StorageClass(object):
     
@@ -109,8 +110,16 @@ class StorageClass(object):
         db.session.commit()
     
     def buyProducts(self,barcodeQuantityDict,transactionId,customerId,cashierId,transactionDate):
+        productsBought = list()
+        totalPrice = 0
+                
         for enteredBarcode in barcodeQuantityDict.iterkeys():
             productData = Products.query.filter_by(barcode = enteredBarcode).first()
+            if(productData is None):
+                self.storageFeedback.setinfo(" Barcode " + enteredBarcode + " is not present")
+                self.storageFeedback.setexecutionstatus(False)
+                return self.storageFeedback
+                
             soldPrice = productData.displayPrice
             purchaseQty = long(barcodeQuantityDict[enteredBarcode])
             
@@ -122,11 +131,24 @@ class StorageClass(object):
             productData.displayQty = productData.displayQty - purchaseQty  
             newTransaction = Transaction(transactionId,customerId,cashierId,transactionDate, enteredBarcode, barcodeQuantityDict[enteredBarcode], soldPrice)
             db.session.add(newTransaction)
-            print transactionId
+            
+            
+            # These are for output
+            newProductBoughtPrice = int(barcodeQuantityDict[enteredBarcode])*soldPrice
+            productsBought.append(str(enteredBarcode)+ ',' + str(barcodeQuantityDict[enteredBarcode]) + ',' + str(newProductBoughtPrice  ) )
+                        
+            totalPrice = totalPrice + newProductBoughtPrice
+            
+              
+        try:             
+            db.session.commit()
+            self.storageFeedback.setinfo("Transaction Successfully Completed with total price = " + str(totalPrice))
+            self.storageFeedback.setdata(productsBought)
+            print totalPrice
+            self.storageFeedback.setexecutionstatus(True)
+        except IntegrityError as err:
+                self.storageFeedback.setinfo("Transaction Failed due to improper data")
                 
-        db.session.commit()
-        self.storageFeedback.setinfo("Transaction Successfully Completed ")
-        self.storageFeedback.setexecutionstatus(True)
         return self.storageFeedback    
     
     def get_display_price(self,barcode):
