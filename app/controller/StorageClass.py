@@ -158,6 +158,14 @@ class StorageClass(object):
     def get_product_for_barcode(self,enteredBarcode):
         existingProduct = Products.query.filter_by(barcode = enteredBarcode).first()
         return existingProduct
+
+    def set_product_details(self, formData):
+
+        updateproduct = Products.query.filter_by(barcode = formData.barcode.data).first()
+        updateproduct.price = formData.price.data
+        updateproduct.minStock = formData.minStock.data
+        updateproduct.bundleUnit = formData.bundleUnit.data
+        db.session.commit()
     
     def getLastTransactionNo(self):
         lastTransaction = Transaction.query.order_by(db.cast(Transaction.transactionId,db.BigInteger).desc())
@@ -175,3 +183,20 @@ class StorageClass(object):
     def getTransactions(self):
         transactions = Transaction.query.all()
         return transactions
+
+    def getPriceDisplayByID(self, givenID):
+        priceDisplay = PriceDisplay.query.filter(givenID == priceDisplayId)
+        return priceDisplay
+
+    def getPriceDisplayByBarcode(self, givenBarcode):
+        priceDisplay = PriceDisplay.query.filter(givenBarcode == barcode)
+        return priceDisplay
+
+    def getAllPriceDisplay(self, formData):
+        priceDisplay = PriceDisplay.query.all()
+        return priceDisplay
+
+    def delete_product_info(self, enteredBarcode):
+        producttodelete = Products.query.filter_by(barcode = enteredBarcode).first()
+        db.session.delete(producttodelete)
+        db.session.commit()

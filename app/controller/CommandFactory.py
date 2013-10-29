@@ -12,7 +12,7 @@ Created on Sep 10, 2013
 from CustomerOperations import AddCustomer
 from ManufacturerOperations import AddManufacturer,ViewManufacturers
 from CategoryOperations import AddCategory,ViewCategories
-from ProductOperations import AddProduct, ViewProduct, SearchProductBarcode
+from ProductOperations import AddProduct, ViewProduct, SearchProductBarcode, UpdateProduct, DeleteProduct
 from UserOperations import BuyItem
 from TransactionOperations import CreateTransaction,ListTransactions
 from CommunicateWithHQ import UpdateHQServer
@@ -64,8 +64,15 @@ class CommandFactory(object):
         elif operation == "submittransaction":
             updateHQServerCommand = UpdateHQServer()
             return updateHQServerCommand
+
+        elif operation == "updateproduct":
+            updateProductCommand = UpdateProduct()
+            return updateProductCommand
         
         elif operation == "viewproducttransactions":
             viewTransactions = ListTransactions()
             return viewTransactions
 
+        elif operation == "deleteproduct":
+            deleteProductCommand = DeleteProduct()
+            return deleteProductCommand

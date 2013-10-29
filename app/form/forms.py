@@ -17,7 +17,7 @@ def validateNumber(form,field):
 
 
 
-# TODO: Remove this class from here
+
 class RegisterShopForm(Form):
 	shopname = TextField('shopname', validators = [validators.Required()])
 	location = TextField('location', validators = [validators.Required()])
