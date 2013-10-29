@@ -57,7 +57,7 @@ class ToJson(object):
             data_stock = {'Barcode' : row.barcode , 'ShopId' : '5' , 'Stock' : str(temp)}
             list1.append(data_stock)
         for row1 in db.session.query(Products).all():
-            temp1 = db.session.query(func.avg(Products.price)).filter(Products.barcode == row1.barcode).scalar()
+            temp1 = db.session.query(func.avg(Transaction.soldPrice)).filter(Transaction.barcode == row1.barcode and Transaction.transactionDate == datetime.datetime.now().date()).scalar()
             temp2 = db.session.query(func.sum(Transaction.unitSold)).filter(Transaction.barcode == row1.barcode and Transaction.transactionDate == datetime.datetime.now().date()).scalar()
             data_soldstock = {'Barcode' : row1.barcode, 'priceSold' : str(temp1), 'unitSold' : str(temp2), 'ShopId' : '5'}
             list2.append(data_soldstock)
