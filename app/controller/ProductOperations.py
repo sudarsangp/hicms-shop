@@ -39,7 +39,7 @@ class AddProduct(Command):
          else:
                  #populate feedback with cannot be added data
                  self.feedbackObject.setinfo("Failed :Duplicate present Data cannot be added")
-                 self.feedbackObject.setdata(formData.name.data)
+                 self.feedbackObject.setdata(formData.proname.data)
                  self.feedbackObject.setcommandtype("AddProduct") 
          
          return self.feedbackObject
@@ -73,3 +73,41 @@ class SearchProductBarcode(Command):
 
     def get_product_for_barcode(self, formData):
         return self.storageObject.get_product_for_barcode(formData.barcode.data)
+
+class UpdateProduct(Command):
+    def __init__(self):
+        self.storageObject = StorageClass()
+        self.feedbackObject = Feedback()
+        
+    def execute(self, formData):
+        inverted = self.storageObject.check_if_Product_exists(formData)
+        actual = not inverted
+        if actual:
+            self.storageObject.set_product_details(formData)
+            self.feedbackObject.setinfo("Success: data updated ")
+            self.feedbackObject.setdata(formData.barcode.data)
+            self.feedbackObject.setcommandtype("Update Product")
+        else:
+            self.feedbackObject.setinfo("Failed: barcode not found ")
+            self.feedbackObject.setdata("Barcode not found")
+            self.feedbackObject.setcommandtype("Update Product")
+        return self.feedbackObject
+
+class DeleteProduct(Command):
+    def __init__(self):
+        self.storageObject = StorageClass()
+        self.feedbackObject = Feedback()
+
+    def execute(self, formData):
+        inverted = self.storageObject.check_if_Product_exists(formData)
+        actual = not inverted
+        if actual:
+            self.storageObject.delete_product_info(formData.barcode.data)
+            self.feedbackObject.setinfo("Success: data deleted ")
+            self.feedbackObject.setdata(formData.barcode.data)
+            self.feedbackObject.setcommandtype("Delete Shop")
+        else:
+            self.feedbackObject.setinfo("Failed: barcode not found ")
+            self.feedbackObject.setdata("barcode not found")
+            self.feedbackObject.setcommandtype("Delete Product")
+        return self.feedbackObject
