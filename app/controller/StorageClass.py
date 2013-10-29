@@ -178,3 +178,10 @@ class StorageClass(object):
         producttodelete = Products.query.filter_by(barcode = enteredBarcode).first()
         db.session.delete(producttodelete)
         db.session.commit()
+
+    def add_current_stock(self, givenbarcode, quantity_to_add):
+        existingprod = Products.query.filter_by(barcode = givenbarcode).first()
+        print existingprod.currentStock, quantity_to_add
+        existingprod.currentStock += quantity_to_add
+        print existingprod.currentStock
+        db.session.commit()

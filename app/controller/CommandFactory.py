@@ -15,7 +15,7 @@ from CategoryOperations import AddCategory,ViewCategories
 from ProductOperations import AddProduct, ViewProduct, SearchProductBarcode, UpdateProduct, DeleteProduct
 from UserOperations import BuyItem
 from TransactionOperations import CreateTransaction,ListTransactions
-from CommunicateWithHQ import UpdateHQServer
+from CommunicateWithHQ import UpdateHQServer, GetStockFromHQ
 
 
 class CommandFactory(object):
@@ -76,3 +76,7 @@ class CommandFactory(object):
         elif operation == "deleteproduct":
             deleteProductCommand = DeleteProduct()
             return deleteProductCommand
+
+        elif operation == "requeststock":
+            getStockCommand = GetStockFromHQ()
+            return getStockCommand

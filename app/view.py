@@ -106,6 +106,12 @@ def sa_operation():
     elif operation == "retrieveserverinformation":
       return redirect(url_for("shop_server_info"))
 
+    elif operation == "requeststock":
+      return redirect(url_for('request_stock', operation = operation))
+
+    elif operation == "getprice":
+      return redirect(url_for('get_price', operation = operation))
+
     else:
       return "Mapping not yet implemented"
 
@@ -246,7 +252,9 @@ def db_check():
 @app.route('/shopserverinfo', methods = ['POST','GET']) 
 def shop_server_info():
   #fromhq = request.data
-  fromhq = requests.get('http://127.0.0.1:5000/download')
+  #change to this one for final demo
+  fromhq = requests.get('http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/download')
+  #fromhq = requests.get('http://127.0.0.1:5000/download')
   #alldata = json.loads(fromhq)
   alldata = fromhq.json()
   feedback = Feedback()
@@ -327,3 +335,19 @@ def hardwareImitater():
 	elif request.method == 'GET':
 		return render_template('hardwareImitater.html',form = form)  
 
+@app.route('/requeststock/<operation>', methods = ['GET', 'POST'])
+def request_stock(operation):
+  form = BuyItem()
+  if request.method == "POST":
+    logicObject = Logic.Logic()
+    print form.barcode.data
+    print form.quantity.data
+    feedback = logicObject.execute(operation,form)
+    return render_template('feedback.html', feedback  = feedback)
+
+  elif request.method == 'GET':
+    return render_template('buyitem.html',form = form)
+
+@app.route('/getpriceresult/<operation>', methods = ['GET', 'POST'])
+def get_price(operation):
+  return "get price"
