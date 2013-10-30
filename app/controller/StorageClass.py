@@ -144,7 +144,7 @@ class StorageClass(object):
                         
             totalPrice = totalPrice + newProductBoughtPrice
             
-              
+            print transactionId  
         try:             
             db.session.commit()
             self.storageFeedback.setinfo("Transaction Successfully Completed with total price = " + str(totalPrice))
@@ -153,7 +153,7 @@ class StorageClass(object):
             self.storageFeedback.setexecutionstatus(True)
         except IntegrityError as err:
                 self.storageFeedback.setinfo("Transaction Failed due to improper data")
-                
+                print err
         return self.storageFeedback    
     
     def get_display_price(self,barcode):
