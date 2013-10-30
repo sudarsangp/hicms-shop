@@ -16,7 +16,7 @@ from ProductOperations import AddProduct, ViewProduct, SearchProductBarcode, Upd
 from UserOperations import BuyItem
 from TransactionOperations import CreateTransaction,ListTransactions
 from CommunicateWithHQ import UpdateHQServer, GetStockFromHQ
-from PriceDisplay import ListPDUById
+from priceDisplay import ListPDUById, AddPDU
 
 
 class CommandFactory(object):
@@ -89,3 +89,7 @@ class CommandFactory(object):
         elif operation == "requeststock":
             getStockCommand = GetStockFromHQ()
             return getStockCommand
+        
+        elif operation == "addpricedisplayunit":
+            addPDUCommand = AddPDU()
+            return addPDUCommand
