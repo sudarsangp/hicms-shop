@@ -256,3 +256,11 @@ class StorageClass(object):
            self.storageFeedback.setinfo("PDU successfully added")  
            
            return self.storageFeedback
+
+    def data_check_product(self, enteredbarcode):
+        product_id = Products.query.filter_by( barcode = enteredbarcode).first()
+        if product_id:
+            return True
+        else:
+            return False
+
