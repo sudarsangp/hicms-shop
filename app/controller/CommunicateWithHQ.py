@@ -72,14 +72,32 @@ class GetPriceFromHQ(Command):
 		#jsend = json.dumps(send_bar)
 		r = requests.get(url)
 		allbarprice = r.json()
+		self.feedbackObject.setinfo("Failed: barcode not found ")
+		self.feedbackObject.setdata("new price")
+		self.feedbackObject.setcommandtype("GetStockFromHQ")
 		list_bar_price = allbarprice['barcodeprice']
+		#print list_bar_price
 		for i in range(len(list_bar_price)):
 			bar_price_info = literal_eval(json.dumps(list_bar_price[i]))
 			in_barcode = bar_price_info['barcode']
 			in_newprice = bar_price_info['newprice']
 			#print in_barcode, in_newprice
-			self.storageObject.set_price_from_hq(in_barcode, in_newprice)
+			actual = self.storageObject.data_check_product(in_barcode)
+        	#actual = not inverted
+        	print actual
+        	if actual:
+				self.storageObject.set_price_from_hq(in_barcode, in_newprice)
+				self.feedbackObject.setinfo("Success: price got")
+				self.feedbackObject.setdata("new price")
+				self.feedbackObject.setcommandtype("GetStockFromHQ")
+				print "insdie actual"
+			#else:
 
+			#	self.feedbackObject.setinfo("Failed: barcode not found ")
+			#	self.feedbackObject.setdata("new priec")
+			#	self.feedbackObject.setcommandtype("GetStockFromHQ")
+
+		return self.feedbackObject
 		#json_gotprice = r.json()
 		#print r.text()
 
