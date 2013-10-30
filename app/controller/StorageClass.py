@@ -200,3 +200,24 @@ class StorageClass(object):
         producttodelete = Products.query.filter_by(barcode = enteredBarcode).first()
         db.session.delete(producttodelete)
         db.session.commit()
+    
+    def addDisplayStockToDb(self,formData):
+        productToIncreaseDisplay = Products.query.filter_by(barcode = formData.barcode.data).first()
+        print productToIncreaseDisplay.currentStock
+        print formData.quantity.data
+        if(int(productToIncreaseDisplay.currentStock) > int(formData.quantity.data)):
+
+            productToIncreaseDisplay.currentStock = productToIncreaseDisplay.currentStock- int(formData.quantity.data)
+            productToIncreaseDisplay.displayQty =  productToIncreaseDisplay.displayQty + int(formData.quantity.data) 
+            db.session.add(productToIncreaseDisplay)
+            db.session.commit()
+             
+            self.storageFeedback.setexecutionstatus(True)
+            self.storageFeedback.setinfo("Successfully increased Display Stock levels")
+        
+        else:
+            self.storageFeedback.setinfo("Sorry the current Stock level is less than requested Quantity")
+            self.storageFeedback.setexecutionstatus(False)
+                 
+        return self.storageFeedback   
+         

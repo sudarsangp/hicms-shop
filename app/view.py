@@ -2,7 +2,7 @@ from flask import render_template, flash, request, session, redirect, url_for, j
 from flask.ext.login import login_required
 from app import app, login_manager
 
-from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer ,AddManufacturer , AddCategory, AddProduct, BuyItem, HardwareImitater
+from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer ,AddManufacturer , AddCategory, AddProduct, BuyItem, HardwareImitater, AddDisplayStock
 
 from form.forms import SearchBarcode
 
@@ -105,7 +105,10 @@ def sa_operation():
     
     elif operation == "retrieveserverinformation":
       return redirect(url_for("shop_server_info"))
-
+    
+    elif operation == "adddisplaystock":
+	  return redirect(url_for("add_Display_Stock", operation = operation))	
+    
     else:
       return "Mapping not yet implemented"
 
@@ -221,6 +224,18 @@ def addproduct(operation):
 	
 	elif request.method == 'GET':
 		return render_template('addproduct.html', form = form)
+
+@app.route('/adddisplaystock/<operation>', methods = ['POST', 'GET'])
+#@login_required
+def add_Display_Stock(operation):
+ 	form = AddDisplayStock()	
+ 	if request.method == 'POST':
+ 		logicObject = Logic.Logic()
+ 		feedback = logicObject.execute('adddisplaystock',form)
+ 		return render_template('feedback.html', feedback = feedback)
+ 	
+ 	elif request.method == 'GET':
+ 		return render_template('adddisplaystock.html', form=form)
 	
 @app.route('/user', methods = ['POST', 'GET'])
 def buyitem():
