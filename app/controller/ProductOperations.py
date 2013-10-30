@@ -111,3 +111,15 @@ class DeleteProduct(Command):
             self.feedbackObject.setdata("barcode not found")
             self.feedbackObject.setcommandtype("Delete Product")
         return self.feedbackObject
+    
+class AddDisplayProduct(Command):
+    def __init__(self):
+        self.storageObject = StorageClass()
+        self.feedbackObject = Feedback()
+        
+    def execute(self,formData):
+        feedbackObject = self.storageObject.addDisplayStockToDb(formData)
+        self.feedbackObject = feedbackObject
+        return self.feedbackObject
+        
+                

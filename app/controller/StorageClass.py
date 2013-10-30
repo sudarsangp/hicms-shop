@@ -25,7 +25,7 @@ class StorageClass(object):
         db.session.add(newCustomerData)
         try:
         	db.session.commit()
-        except Exception as e:
+        except IntegrityError as err:
         	#log data
         	# this part need to check whether exception works
         	db.session.flush()
@@ -74,8 +74,13 @@ class StorageClass(object):
         newProductData = Products(formData.barcode.data,formData.proname.data,formData.manufacturerId.data,formData.category.data,formData.price.data,
                                   formData.minStock.data,formData.currentStock.data,formData.bundleUnit.data,formData.displayPrice.data,formData.displayQty.data)
 
+        
         db.session.add(newProductData) 
-        db.session.commit()  
+        try:
+            db.session.commit() 
+        except IntegrityError as err:
+                self.storageFeedback.setinfo("Transaction Failed due to improper data") 
+                print self.storageFeedback.info
     
     def check_if_Product_exists(self,formData):
         product_id = Products.query.filter_by( barcode = formData.barcode.data).first()
@@ -201,6 +206,30 @@ class StorageClass(object):
         producttodelete = Products.query.filter_by(barcode = enteredBarcode).first()
         db.session.delete(producttodelete)
         db.session.commit()
+    
+    def addDisplayStockToDb(self,formData):
+        productToIncreaseDisplay = Products.query.filter_by(barcode = formData.barcode.data).first()
+        
+        if productToIncreaseDisplay is None:
+            self.storageFeedback.setinfo("Sorry the barcode does not exist")
+            self.storageFeedback.setexecutionstatus(False)
+        
+        elif(int(productToIncreaseDisplay.currentStock) > int(formData.quantity.data)):
+
+            productToIncreaseDisplay.currentStock = productToIncreaseDisplay.currentStock- int(formData.quantity.data)
+            productToIncreaseDisplay.displayQty =  productToIncreaseDisplay.displayQty + int(formData.quantity.data) 
+            db.session.add(productToIncreaseDisplay)
+            db.session.commit()
+             
+            self.storageFeedback.setexecutionstatus(True)
+            self.storageFeedback.setinfo("Successfully increased Display Stock levels")
+        
+        else:
+            self.storageFeedback.setinfo("Sorry the current Stock level is less than requested Quantity")
+            self.storageFeedback.setexecutionstatus(False)
+                 
+        return self.storageFeedback   
+         
 
     def add_current_stock(self, givenbarcode, quantity_to_add):
         existingprod = Products.query.filter_by(barcode = givenbarcode).first()
@@ -214,3 +243,16 @@ class StorageClass(object):
         existingprod = Products.query.filter_by(barcode = enteredbarcode).first()
         existingprod.price = newprice
         db.session.commit()
+        
+    def addPriceDisplayUnit(self,formData):
+        product = Products.query.filter_by(barcode = formData.barcode.data).first()
+        if product is None:
+           self.storageFeedback.setinfo("Sorry Product does not exist with barcode " + barcode)     
+        
+        else:
+           newPriceDisplay = PriceDisplay(formData.displayId.data,formData.barcode.data)
+           db.session.add(newPriceDisplay)
+           db.session.commit()
+           self.storageFeedback.setinfo("PDU successfully added")  
+           
+           return self.storageFeedback

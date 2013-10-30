@@ -42,13 +42,13 @@ class AddPDU(Command):
 
 	def __init__(self):
 		self.storageObject = StorageClass()
-		self.Feedback = Feedback()
+		self.feedback = Feedback()
 
 	def execute(self, formData):
-		return self.addPDU(formData)
-
-	def addPDU(self, formData):
 		return self.storageObject.addPriceDisplayUnit(formData)
+        
+        
+
 
 
 

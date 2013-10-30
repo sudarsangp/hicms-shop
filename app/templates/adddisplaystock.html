@@ -1,0 +1,20 @@
+{% extends "baselayout.html" %}
+ 
+{% block content %}
+Hardware Imitater<br><br>
+
+
+<form action="" method = post>
+	
+	Enter Barcode
+	{{form.barcode}} <br>
+	
+	Enter Quantity  
+	{{ form.quantity }} <br>
+
+		
+	<input type="submit" value="Increase Display Stock">
+</form>
+
+
+{% endblock %}

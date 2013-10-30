@@ -12,12 +12,11 @@ Created on Sep 10, 2013
 from CustomerOperations import AddCustomer
 from ManufacturerOperations import AddManufacturer,ViewManufacturers
 from CategoryOperations import AddCategory,ViewCategories
-from ProductOperations import AddProduct, ViewProduct, SearchProductBarcode, UpdateProduct, DeleteProduct
+from ProductOperations import AddProduct, ViewProduct, SearchProductBarcode, UpdateProduct, DeleteProduct,AddDisplayProduct
 from UserOperations import BuyItem
 from TransactionOperations import CreateTransaction,ListTransactions
 from CommunicateWithHQ import UpdateHQServer, GetStockFromHQ, GetPriceFromHQ
-from priceDisplay import ListPDUById
-
+from priceDisplay import ListPDUById, AddPDU
 
 class CommandFactory(object):
     
@@ -81,6 +80,10 @@ class CommandFactory(object):
         elif operation == "deleteproduct":
             deleteProductCommand = DeleteProduct()
             return deleteProductCommand
+        
+        elif operation == "adddisplaystock":
+            addDisplayProductCommand = AddDisplayProduct()
+            return addDisplayProductCommand
 
         elif operation == "requeststock":
             getStockCommand = GetStockFromHQ()
@@ -89,3 +92,7 @@ class CommandFactory(object):
         elif operation == "getprice":
             getPriceCommand = GetPriceFromHQ()
             return getPriceCommand
+        
+        elif operation == "addpricedisplayunit":
+            addPDUCommand = AddPDU()
+            return addPDUCommand
