@@ -15,7 +15,8 @@ from CategoryOperations import AddCategory,ViewCategories
 from ProductOperations import AddProduct, ViewProduct, SearchProductBarcode, UpdateProduct, DeleteProduct,AddDisplayProduct
 from UserOperations import BuyItem
 from TransactionOperations import CreateTransaction,ListTransactions
-from CommunicateWithHQ import UpdateHQServer
+from CommunicateWithHQ import UpdateHQServer, GetStockFromHQ
+from priceDisplay import ListPDUById
 
 
 class CommandFactory(object):
@@ -73,6 +74,10 @@ class CommandFactory(object):
             viewTransactions = ListTransactions()
             return viewTransactions
 
+        elif operation == "viewpdubyid":
+            viewPduById = ListPDUById()
+            return viewPduById
+
         elif operation == "deleteproduct":
             deleteProductCommand = DeleteProduct()
             return deleteProductCommand
@@ -80,4 +85,7 @@ class CommandFactory(object):
         elif operation == "adddisplaystock":
             addDisplayProductCommand = AddDisplayProduct()
             return addDisplayProductCommand
-            
+
+        elif operation == "requeststock":
+            getStockCommand = GetStockFromHQ()
+            return getStockCommand

@@ -1,0 +1,23 @@
+{% extends "baselayout.html" %}
+{% block content %}
+
+<table class = "table">
+	<thead>
+		<tr>
+			<th>Price Display Unit Id</th>
+			<th>Barcode</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for productobj in pduObj %}
+		<tr>
+		
+			<td>{{ productobj.priceDisplayId }}</td>
+			<td>{{ productobj.barcode }}</td>
+		
+		</tr>
+	{% endfor %}
+	</tbody>
+</table>
+
+{% endblock %}

@@ -6,7 +6,7 @@
 '''
 
 
-from app.model.models import db, Customer,Manufacturers,Category,Products,Transaction
+from app.model.models import db, Customer,Manufacturers,Category,Products,Transaction, PriceDisplay
 from Feedback import Feedback
 from flask import session
 from sqlalchemy import desc
@@ -184,17 +184,18 @@ class StorageClass(object):
         transactions = Transaction.query.all()
         return transactions
 
-    def getPriceDisplayByID(self, givenID):
-        priceDisplay = PriceDisplay.query.filter(givenID == priceDisplayId)
+    def getPriceDisplayById(self, givenID):
+        priceDisplay = PriceDisplay.query.filter( PriceDisplay.priceDisplayId == givenID.Id.data)
         return priceDisplay
 
     def getPriceDisplayByBarcode(self, givenBarcode):
-        priceDisplay = PriceDisplay.query.filter(givenBarcode == barcode)
+        priceDisplay = PriceDisplay.query.filter(givenBarcode == PriceDisplay.barcode)
         return priceDisplay
 
     def getAllPriceDisplay(self, formData):
         priceDisplay = PriceDisplay.query.all()
         return priceDisplay
+
 
     def delete_product_info(self, enteredBarcode):
         producttodelete = Products.query.filter_by(barcode = enteredBarcode).first()
@@ -221,3 +222,11 @@ class StorageClass(object):
                  
         return self.storageFeedback   
          
+
+    def add_current_stock(self, givenbarcode, quantity_to_add):
+        existingprod = Products.query.filter_by(barcode = givenbarcode).first()
+        print existingprod.currentStock, quantity_to_add
+        existingprod.currentStock += quantity_to_add
+        print existingprod.currentStock
+        db.session.commit()
+
