@@ -27,7 +27,8 @@ class RegisterShopForm(Form):
 
 class ShopAdminFunction(Form):
   operations = RadioField('operations', choices = [('searchBarcode','Search Barcode'),('viewproducts','View Product'),('submittransaction','Submit Transaction'),
-  ('retrieveserverinformation','Retrieve Server Information'),('viewproducttransactions','View Transactions'),('adddisplaystock','Add Display Stock'),('requeststock','Request Stock'),('getprice','Get Price'),('viewpdubyid', 'Search PDU')])
+  ('retrieveserverinformation','Retrieve Server Information'),('viewproducttransactions','View Transactions'),('adddisplaystock','Add Display Stock'),('requeststock','Request Stock'),('getprice','Get Price'),('viewpdubyid', 'Search PDU'),
+   ('addpricedisplayunit','Add price Display Unit') ])
 
   # for testing use this /product url
   """[('addproduct','Add product'),('editproduct','Edit Product'),('removeproduct','Remove Product'),
@@ -99,6 +100,14 @@ class AddDisplayStock(Form):
 
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
+    
+class AddDisplayUnit(Form):
+   displayId = TextField('displayId')
+   barcode = TextField('barcode')
+   
+   def __init__(self, *args, **kwargs):
+       Form.__init__(self, *args, **kwargs)
+        
   
 ################################################################################################################################################
 class SignupForm(Form):

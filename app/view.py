@@ -2,7 +2,7 @@ from flask import render_template, flash, request, session, redirect, url_for, j
 from flask.ext.login import login_required
 from app import app, login_manager
 
-from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer ,AddManufacturer , AddCategory, AddProduct, BuyItem, HardwareImitater, AddDisplayStock, SearchPDUId
+from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer ,AddManufacturer , AddCategory, AddProduct, BuyItem, HardwareImitater, AddDisplayStock, SearchPDUId,AddDisplayUnit
 
 from form.forms import SearchBarcode
 
@@ -118,7 +118,9 @@ def sa_operation():
     elif operation == "getprice":
       return redirect(url_for('get_price', operation = operation))
 
-
+    elif operation == "addpricedisplayunit":
+      return redirect(url_for('addPduDisplay', operation = operation)) 
+    
     else:
       return "Mapping not yet implemented"
 
@@ -400,3 +402,16 @@ def pdudisplaybyid(operation):
       elif request.method == "GET" :
         return render_template('searchpdubyid.html', form = form)
 
+@app.route('/addpduunit/<operation>',methods = ['POST','GET'])
+def addPduDisplay(operation):
+    form = AddDisplayUnit()
+       
+    if request.method == "POST":
+        logicObject = Logic.Logic()
+        feedback = logicObject.execute(operation,form)
+
+        return render_template('feedback.html', feedback = feedback)
+       
+    elif request.method == "GET" :
+        return render_template('addpduunit.html', form = form)
+        
