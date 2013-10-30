@@ -16,7 +16,7 @@ from ProductOperations import AddProduct, ViewProduct, SearchProductBarcode, Upd
 from UserOperations import BuyItem
 from TransactionOperations import CreateTransaction,ListTransactions
 from CommunicateWithHQ import UpdateHQServer, GetStockFromHQ
-from priceDisplay import ListPDUById
+from PriceDisplay import ListPDUById
 
 
 class CommandFactory(object):
