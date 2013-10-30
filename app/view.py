@@ -353,6 +353,8 @@ def request_stock(operation):
 
 @app.route('/getpriceresult/<operation>', methods = ['GET', 'POST'])
 def get_price(operation):
+  logicObject = Logic.Logic()
+  logicObject.execute(operation,None)
   return "get price"
 
 #@app.route('/pdudisplaybybarcode/<operation>', methods = ['POST,GET]'])

@@ -204,7 +204,13 @@ class StorageClass(object):
 
     def add_current_stock(self, givenbarcode, quantity_to_add):
         existingprod = Products.query.filter_by(barcode = givenbarcode).first()
-        print existingprod.currentStock, quantity_to_add
+        #print existingprod.currentStock, quantity_to_add
         existingprod.currentStock += quantity_to_add
-        print existingprod.currentStock
+        #print existingprod.currentStock
+        db.session.commit()
+
+    def set_price_from_hq(self, enteredbarcode, newprice):
+
+        existingprod = Products.query.filter_by(barcode = enteredbarcode).first()
+        existingprod.price = newprice
         db.session.commit()
