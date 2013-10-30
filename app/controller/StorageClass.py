@@ -217,7 +217,8 @@ class StorageClass(object):
         elif(int(productToIncreaseDisplay.currentStock) > int(formData.quantity.data)):
 
             productToIncreaseDisplay.currentStock = productToIncreaseDisplay.currentStock- int(formData.quantity.data)
-            productToIncreaseDisplay.displayQty =  productToIncreaseDisplay.displayQty + int(formData.quantity.data) 
+            productToIncreaseDisplay.displayQty =  productToIncreaseDisplay.displayQty + int(formData.quantity.data)
+            productToIncreaseDisplay.displayPrice = productToIncreaseDisplay.price 
             db.session.add(productToIncreaseDisplay)
             db.session.commit()
              
