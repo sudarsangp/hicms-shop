@@ -4,7 +4,8 @@ from Feedback import Feedback
 from TransactionOperations import ToJson
 
 import requests, json
-url = 'http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/serverinfo'
+from ast import literal_eval
+
 class UpdateHQServer(Command):
 	def __init__(self):
 		self.storageObject = StorageClass()
@@ -13,6 +14,7 @@ class UpdateHQServer(Command):
 	
 	def execute(self, formData):
 		#url = 'http://127.0.0.1:5000/serverinfo'
+		url = 'http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/serverinfo'
 		testvalue = self.json.retJSON()
 		jdata = json.dumps(testvalue)
 		r = requests.post(url,data=jdata)
@@ -28,6 +30,7 @@ class GetStockFromHQ(Command):
 
 	def execute(self, formData):
 		#url = 'http://127.0.0.1:5000/getstock'
+		url = 'http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/getstock'
 		givenbarcode = formData.barcode.data
 		givenquantity = formData.quantity.data
 		#inverted = self.storageObject.check_if_Product_exists(formData)
@@ -55,3 +58,28 @@ class GetStockFromHQ(Command):
 			self.feedbackObject.setdata(r.json())
 			self.feedbackObject.setcommandtype("GetStockFromHQ")
 		return self.feedbackObject
+
+class GetPriceFromHQ(Command):
+	def __init__(self):
+		self.storageObject = StorageClass()
+		self.feedbackObject = Feedback()
+
+	def execute(self, formData):
+		#url = 'http://127.0.0.1:5000/getprice'
+		url = 'http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/getprice'
+		#givenbarcode = formData.barcode.data
+		#send_bar = {'barcode': givenbarcode}
+		#jsend = json.dumps(send_bar)
+		r = requests.get(url)
+		allbarprice = r.json()
+		list_bar_price = allbarprice['barcodeprice']
+		for i in range(len(list_bar_price)):
+			bar_price_info = literal_eval(json.dumps(list_bar_price[i]))
+			in_barcode = bar_price_info['barcode']
+			in_newprice = bar_price_info['newprice']
+			#print in_barcode, in_newprice
+			self.storageObject.set_price_from_hq(in_barcode, in_newprice)
+
+		#json_gotprice = r.json()
+		#print r.text()
+
