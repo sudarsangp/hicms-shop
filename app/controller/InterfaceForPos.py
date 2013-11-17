@@ -1,3 +1,6 @@
+from StorageClass import StorageClass
+from Feedback import Feedback
+
 
 class InterfaceForPos(object):
     '''
@@ -5,7 +8,8 @@ class InterfaceForPos(object):
      
     '''
     def __init__(self):
-        pass
+        self.storageObject = StorageClass()
+        self.feedbackObject = Feedback()
     
     def parseForSoftwareImitater(self,formData):
         input = formData.barcode.data
@@ -18,4 +22,27 @@ class InterfaceForPos(object):
              x = x + 2   
              
             
-        return barcodeQtyDict  
+        return barcodeQtyDict
+    
+    def parseForPoS(self,inputDataFromPOS):
+        input = inputDataFromPOS
+        result = input.split(',')
+        barcodeQtyDict = dict()
+        
+        x = 0   
+        while x < (len(result) - 1) :
+             barcodeQtyDict[result[x]] = result[x+1] 
+             x = x + 2   
+             
+            
+        return barcodeQtyDict
+          
+    
+    def getPriceForBarcode(self,barcode):
+        productEntered = self.storageObject.get_product_for_barcode(barcode)
+        if productEntered is None:
+            print "Product not present"
+            
+        else:
+            return productEntered.price     
+          
