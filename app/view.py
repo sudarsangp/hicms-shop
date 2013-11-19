@@ -274,8 +274,8 @@ def db_check():
 def shop_server_info():
   #fromhq = request.data
   #change to this one for final demo
-  fromhq = requests.get('http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/download')
-  #fromhq = requests.get('http://127.0.0.1:5000/download')
+  #fromhq = requests.get('http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/download')
+  fromhq = requests.get('http://127.0.0.1:5000/download')
   #alldata = json.loads(fromhq)
   alldata = fromhq.json()
   feedback = Feedback()
@@ -416,4 +416,17 @@ def addPduDisplay(operation):
        
     elif request.method == "GET" :
         return render_template('addpduunit.html', form = form)
+
+from flask.ext.mail import Message
+from app import mail
+from config import ADMINS,RECIPIENTS
+
+@app.route('/sendemail')
+def send_email():
+  msg = Message("hello", sender = ADMINS[0], recipients = RECIPIENTS)
+  msg.body = 'text body'
+  msg.html = '<b>hello this email is sent from our cg3002 app :) </b>'
+  with app.app_context():
+    mail.send(msg)
+  return "checking"
         
