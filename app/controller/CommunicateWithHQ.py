@@ -29,11 +29,22 @@ class GetStockFromHQ(Command):
 		self.storageObject = StorageClass()
 		self.feedbackObject = Feedback()
 
+	def parsebarcodequantity(self,formData):
+		inputs = formData.barcode.data
+		result = inputs.split(',')
+		barcodeQtyDict = dict()
+		x = 0
+		while x <(len(result) - 1):
+			barcodeQtyDict[result[x]] = result[x+1]
+			x = x+2
+		return barcodeQtyDict
+
 	def execute(self, formData):
-		#url = 'http://127.0.0.1:5000/getstock'
-		url = 'http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/getstock'
-		givenbarcode = formData.barcode.data
-		givenquantity = formData.quantity.data
+		url = 'http://127.0.0.1:5000/getstock'
+		#url = 'http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/getstock'
+		dict_bar_quantity = self.parsebarcodequantity(formData)
+		#givenbarcode = formData.barcode.data
+		#givenquantity = formData.quantity.data
 		#inverted = self.storageObject.check_if_Product_exists(formData)
         #if inverted:
         #	pass
@@ -42,22 +53,29 @@ class GetStockFromHQ(Command):
     	#self.feedbackObject.setcommandtype("GetStockFromHQ")
     	#return self.feedbackObject
         #else:
-		send_bar_quantity = {'barcode':givenbarcode,'quantity':givenquantity}
-		jsend = json.dumps(send_bar_quantity)
+		print dict_bar_quantity, type(dict_bar_quantity)
+		send_list = []
+		for key, value in dict_bar_quantity.items():
+			send_bar_quantity = {'barcode':key,'quantity':value}
+			send_list.append(send_bar_quantity)
+		send_data = {'getstock':send_list}
+		jsend = json.dumps(send_data)
 		r = requests.get(url,data = jsend)
 		json_gotquantity = r.json()
-		#gotquantity = json.loads(json_gotquantity)
-		quantity_to_add = long(json_gotquantity['quantity'])
-		if quantity_to_add >= 0:
-			self.storageObject.add_current_stock(givenbarcode, quantity_to_add)
-			self.feedbackObject.setinfo("Success: quantity got")
-			self.feedbackObject.setdata(r.json())
-			self.feedbackObject.setcommandtype("GetStockFromHQ")
-			#return self.feedbackObject
-		else:
-			self.feedbackObject.setinfo("Failure: cannot add quantity")
-			self.feedbackObject.setdata(r.json())
-			self.feedbackObject.setcommandtype("GetStockFromHQ")
+		for bar_quantity in json_gotquantity['getstockdata']:
+
+			barcode_got = bar_quantity['barcode']
+			quantity_to_add = long(bar_quantity['quantity'])
+			if quantity_to_add >= 0:
+				self.storageObject.add_current_stock(barcode_got, quantity_to_add)
+				self.feedbackObject.setinfo("Success: quantity got")
+				self.feedbackObject.setdata(r.json())
+				self.feedbackObject.setcommandtype("GetStockFromHQ")
+				#return self.feedbackObject
+			else:
+				self.feedbackObject.setinfo("Failure: cannot add quantity")
+				self.feedbackObject.setdata(r.json())
+				self.feedbackObject.setcommandtype("GetStockFromHQ")
 		return self.feedbackObject
 
 class GetPriceFromHQ(Command):

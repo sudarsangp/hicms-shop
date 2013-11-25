@@ -1,0 +1,12 @@
+{% extends "baselayout.html" %}
+ 
+{% block content %}
+
+<form action="" method = post>
+	Enter Barcode and Quantity
+	{{ form.barcode }} <br>
+		
+	<input type="submit" value="Submit">
+	<br>(comma to separate barcode, quantity)
+</form>
+{% endblock %}

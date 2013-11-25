@@ -4,7 +4,7 @@ from app import app, login_manager
 
 from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer ,AddManufacturer , AddCategory, AddProduct, BuyItem, HardwareImitater, AddDisplayStock, SearchPDUId,AddDisplayUnit
 
-from form.forms import SearchBarcode
+from form.forms import SearchBarcode, GetStockForm
 
 from model.models import Check, User, db, Customer
 from controller import Logic,InterfaceForPos
@@ -345,7 +345,7 @@ def hardwareImitater():
 		# parse the data
 		dummyPosInterface = InterfaceForPos.InterfaceForPos()
 		newBarcodeQtyDict =  dummyPosInterface.parseForSoftwareImitater(form) 
- 		
+ 		#print newBarcodeQtyDict
  		# provide the form with dictionary as a parameter to the execute method
  		logicObject = Logic.Logic()
  		form.barcode.data = newBarcodeQtyDict
@@ -358,16 +358,18 @@ def hardwareImitater():
 
 @app.route('/requeststock/<operation>', methods = ['GET', 'POST'])
 def request_stock(operation):
-  form = BuyItem()
+  form = GetStockForm()
   if request.method == "POST":
     logicObject = Logic.Logic()
-    print form.barcode.data
-    print form.quantity.data
+    #newBarcodeQtyDict = logicObject.parsebarcodequantity(form)
+    #form.barcode.data = newBarcodeQtyDict
+    #print form.barcode.data
+    #print form.quantity.data
     feedback = logicObject.execute(operation,form)
     return render_template('feedback.html', feedback  = feedback)
 
   elif request.method == 'GET':
-    return render_template('buyitem.html',form = form)
+    return render_template('getstock.html',form = form)
 
 @app.route('/getpriceresult/<operation>', methods = ['GET', 'POST'])
 def get_price(operation):
