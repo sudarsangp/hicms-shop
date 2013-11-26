@@ -5,7 +5,9 @@ from Feedback import Feedback
 from app.model.models import db,Products, Transaction
 from sqlalchemy.sql import func
 
-import datetime
+from ast import literal_eval
+
+import datetime, os
 import json
 
 class CreateTransaction(Command):
@@ -56,10 +58,34 @@ class ToJson(object):
           #  temp = row.currentStock + row.displayQty
             #data_stock = {'Barcode' : row.barcode , 'ShopId' : '5' , 'Stock' : str(temp)}
             #list1.append(data_stock)
+        #fname = 'stockdata.txt'
+        #list_content = []
+        #try:
+        #    with open(fname):
+        #        f = open(fname,"r")
+        #        contentdata = f.read()
+        #        list_content = contentdata.split(';')
+        #        del list_content[0]
+        #        #print type(list_content)
+        #        for eachbarcode in list_content:
+        #            #print type(eachbarcode)
+        #            newtypebarcode = literal_eval(eachbarcode)
+        #            #print type(newtypebarcode), newtypebarcode
+        #            eachvalueforbarcode = newtypebarcode['barcode']
+        #            eachvalue = Products.query.filter_by(barcode = eachvalueforbarcode).first()
+        #            total = eachvalue.currentStock + eachvalue.displayQty
+        #            data_stock = {'barcode' : eachvalueforbarcode , 'stock' : str(total)}
+        #            list1.append(data_stock)
+        #        open(fname, 'w').close()
+        #except IOError:
+        #  no_file = {'update':'No file'}   
+        
         for row in Products.query.all():
             temp = row.currentStock + row.displayQty
             data_stock = {'Barcode' : row.barcode , 'Stock' : str(temp)}
             list1.append(data_stock)
+        #    if int(row.barcode) == 2:
+        #        print data_stock
        # for row1 in db.session.query(Products).all():
          #   temp1 = db.session.query(func.avg(Transaction.soldPrice)).filter(Transaction.barcode == row1.barcode and Transaction.transactionDate == datetime.datetime.now().date()).scalar()
          #   temp2 = db.session.query(func.sum(Transaction.unitSold)).filter(Transaction.barcode == row1.barcode and Transaction.transactionDate == datetime.datetime.now().date()).scalar()
@@ -88,5 +114,5 @@ class ToJson(object):
         #print total
         #print len(list1), len(list2)
         final_json = {'Stock' : list1, 'SoldStock' : list2}
-        send_shopid_json = {'5':final_json}
+        send_shopid_json = {'1':final_json}
         return send_shopid_json

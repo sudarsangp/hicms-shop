@@ -12,6 +12,8 @@ from flask import session
 from sqlalchemy import desc
 from sqlalchemy.exc import IntegrityError
 
+fname = 'stockdata.txt'
+
 class StorageClass(object):
     
     def __init__(self):
@@ -123,6 +125,7 @@ class StorageClass(object):
             if(productData is None):
                 self.storageFeedback.setinfo(" Barcode " + enteredBarcode + " is not present")
                 self.storageFeedback.setexecutionstatus(False)
+                self.storageFeedback.setcommandtype("No barcode")
                 return self.storageFeedback
                 
             soldPrice = productData.displayPrice
@@ -131,13 +134,22 @@ class StorageClass(object):
             if(purchaseQty > productData.displayQty):
                 self.storageFeedback.setinfo("Quantity in shelf less than quantity requested" + productData.name + "Transaction Did not occur ")
                 self.storageFeedback.setexecutionstatus(False)
+                self.storageFeedback.setcommandtype("Ask other shop")
+                self.storageFeedback.setinfo(enteredBarcode)
+                self.storageFeedback.setdata(purchaseQty)
                 return self.storageFeedback
             
             productData.displayQty = productData.displayQty - purchaseQty  
             newTransaction = Transaction(transactionId,customerId,cashierId,transactionDate, enteredBarcode, barcodeQuantityDict[enteredBarcode], soldPrice)
             db.session.add(newTransaction)
-            
-            
+            self.storageFeedback.setcommandtype("Buy product")
+
+            f = open(fname,'a')
+            barcodedict = {}
+            barcodedict['barcode'] = unicode(enteredBarcode)
+            f.write(';')
+            f.write(str(barcodedict))
+            f.close() 
             # These are for output
             newProductBoughtPrice = int(barcodeQuantityDict[enteredBarcode])*soldPrice
             productsBought.append(str(enteredBarcode)+ ',' + str(barcodeQuantityDict[enteredBarcode]) + ',' + str(newProductBoughtPrice  ) )
@@ -221,7 +233,7 @@ class StorageClass(object):
             productToIncreaseDisplay.displayPrice = productToIncreaseDisplay.price 
             db.session.add(productToIncreaseDisplay)
             db.session.commit()
-             
+
             self.storageFeedback.setexecutionstatus(True)
             self.storageFeedback.setinfo("Successfully increased Display Stock levels")
         

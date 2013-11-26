@@ -13,8 +13,8 @@ class UpdateHQServer(Command):
 		self.json = ToJson()
 	
 	def execute(self, formData):
-		url = 'http://127.0.0.1:5000/serverinfo'
-		#url = 'http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/serverinfo'
+		#url = 'http://127.0.0.1:5000/serverinfo'
+		url = 'http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/serverinfo'
 		testvalue = self.json.retJSON()
 		jdata = json.dumps(testvalue)
 		requests.post(url,data=jdata)
@@ -84,8 +84,8 @@ class GetPriceFromHQ(Command):
 		self.feedbackObject = Feedback()
 
 	def execute(self, formData):
-		#url = 'http://127.0.0.1:5000/getprice'
-		url = 'http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/getprice'
+		url = 'http://127.0.0.1:5000/getprice'
+		#url = 'http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/getprice'
 		#givenbarcode = formData.barcode.data
 		#send_bar = {'barcode': givenbarcode}
 		#jsend = json.dumps(send_bar)
