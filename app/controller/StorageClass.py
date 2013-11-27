@@ -134,10 +134,16 @@ class StorageClass(object):
             if(purchaseQty > productData.displayQty):
                 self.storageFeedback.setinfo("Quantity in shelf less than quantity requested" + productData.name + "Transaction Did not occur ")
                 self.storageFeedback.setexecutionstatus(False)
-                self.storageFeedback.setcommandtype("Ask other shop")
-                self.storageFeedback.setinfo(enteredBarcode)
-                self.storageFeedback.setdata(purchaseQty)
-                return self.storageFeedback
+                if productData.currentStock >= purchaseQty:
+                    self.storageFeedback.setcommandtype("Transaction")
+                    self.storageFeedback.setinfo("Move quantity from current stock to displayQty")
+                    self.storageFeedback.setdata("cannot buy from displayQty")
+                    return self.storageFeedback
+                else:                    
+                    self.storageFeedback.setcommandtype("Ask other shop")
+                    self.storageFeedback.setinfo(enteredBarcode)
+                    self.storageFeedback.setdata(purchaseQty)
+                    return self.storageFeedback
             
             productData.displayQty = productData.displayQty - purchaseQty  
             newTransaction = Transaction(transactionId,customerId,cashierId,transactionDate, enteredBarcode, barcodeQuantityDict[enteredBarcode], soldPrice)
@@ -156,12 +162,13 @@ class StorageClass(object):
                         
             totalPrice = totalPrice + newProductBoughtPrice
             
-            print transactionId  
+            #print productsBought
         try:             
             db.session.commit()
             self.storageFeedback.setinfo("Transaction Successfully Completed with total price = " + str(totalPrice))
             self.storageFeedback.setdata(productsBought)
-            print totalPrice
+            self.storageFeedback.setcommandtype("transaction success")
+            #print totalPrice
             self.storageFeedback.setexecutionstatus(True)
         except IntegrityError as err:
                 self.storageFeedback.setinfo("Transaction Failed due to improper data")
@@ -277,3 +284,6 @@ class StorageClass(object):
         else:
             return False
 
+    def get_email_for_customer(self, inputid):
+        customerdetail = Customer.query.filter_by(customerId = inputid).first()
+        return customerdetail.email

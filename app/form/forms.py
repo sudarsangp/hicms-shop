@@ -42,7 +42,7 @@ class AddCustomer(Form):
   handphone = TextField('handphone', validators = [validators.Required(), validateNotEmpty, validateNumber])
   customerId = TextField('customerId', validators = [validators.Required(), validateNotEmpty]) 
   dateofjoining = DateField('dateofjoining', validators = [validators.Required()])
-  passwordcustomer = PasswordField('passwordcustomer', validators = [validators.Required()])
+  email = TextField("Email")
   
   def __init__(self, *args, **kwargs):
    Form.__init__(self, *args, **kwargs)
@@ -144,6 +144,7 @@ class SigninForm(Form):
       return False
      
     user = User.query.filter_by(email = self.email.data.lower()).first()
+    #print user.check_password(self.password.data)
     if user and user.check_password(self.password.data):
       return True
     else:

@@ -11,22 +11,22 @@ class Customer(db.Model):
   customerId = db.Column(db.String, primary_key = True)
   dateOfJoining = db.Column(db.Date)
   points = db.Column(db.Integer)
-  password = db.Column(db.String(256))
+  email = db.Column(db.String(120), unique=True)
 
-  def __init__(self,name, address, hp, customerId, dateOfJoining, password):
+  def __init__(self,name, address, hp, customerId, dateOfJoining, email):
       self.name = name
       self.address = address
       self.hp = hp
       self.customerId = customerId
       self.dateOfJoining = dateOfJoining
       self.points = 0
-      self.password = set_password(password)
+      self.email = email.lower()
 
   def set_password(self, password):
     self.pwdhash = generate_password_hash(password)
    
   def check_password(self, password):
-    return check_password_hash(self.pwdhash, password)    
+    return check_password_hash(self.pwdhash, password)
 
 class Transaction(db.Model):
 
@@ -125,7 +125,7 @@ class User(db.Model):
   firstname = db.Column(db.String(100))
   lastname = db.Column(db.String(100))
   email = db.Column(db.String(120), unique=True)
-  pwdhash = db.Column(db.String(54))
+  pwdhash = db.Column(db.String(120))
    
   def __init__(self, firstname, lastname, email, password):
     self.firstname = firstname.title()
