@@ -28,7 +28,7 @@ class RegisterShopForm(Form):
 class ShopAdminFunction(Form):
   operations = RadioField('operations', choices = [('searchBarcode','Search Barcode'),('viewproducts','View Product'),('submittransaction','Submit Transaction'),
   ('retrieveserverinformation','Retrieve Server Information'),('viewproducttransactions','View Transactions'),('adddisplaystock','Add Display Stock'),('requeststock','Request Stock'),('getprice','Get Price'),('viewpdubyid', 'Search PDU'),
-   ('addpricedisplayunit','Add price Display Unit') ])
+   ('addpricedisplayunit','Add price Display Unit'),('setdiscount','Set Discount') ])
 
   # for testing use this /product url
   """[('addproduct','Add product'),('editproduct','Edit Product'),('removeproduct','Remove Product'),
@@ -181,3 +181,15 @@ class SearchPDUId(Form):
 
       def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
+
+class SettingsForm(Form):
+  pricefreq = TextField('pricefreq')
+  
+  def __init__(self, *args, **kwargs): # needed for importing in view.py
+      Form.__init__(self, *args, **kwargs)
+
+class SetDiscount(Form):
+  barcode = TextField('barcode')
+  discount = TextField('discount')
+  def __init__(self, *args, **kwargs): # needed for importing in view.py
+      Form.__init__(self, *args, **kwargs)

@@ -122,4 +122,24 @@ class AddDisplayProduct(Command):
         self.feedbackObject = feedbackObject
         return self.feedbackObject
         
-                
+class SetDiscountBarcode(Command):
+    def __init__(self):
+        self.storageObject = StorageClass()
+        self.feedbackObject = Feedback()
+
+    def execute(self, formData):
+        inverted = self.storageObject.check_if_Product_exists(formData)
+        actual = not inverted
+        if actual and int(formData.discount.data)>=0 and int(formData.discount.data) <= 50:
+            self.feedbackObject = self.storageObject.set_discount_for_barcode(formData.barcode.data, formData.discount.data)
+            return self.feedbackObject
+        elif actual is False:
+            self.feedbackObject.setinfo("Failed: barcode not found ")
+            self.feedbackObject.setdata("barcode not found")
+            self.feedbackObject.setcommandtype("Set Discount")
+            return self.feedbackObject
+        else:
+            self.feedbackObject.setinfo("Failed: discount not in range 0 to 50%")
+            self.feedbackObject.setdata("discount above limit ")
+            self.feedbackObject.setcommandtype("Set Discount")
+            return self.feedbackObject

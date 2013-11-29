@@ -8,6 +8,7 @@
     <title> {% block title %} Group 10 HICMS CG3002 {%endblock%}</title> 
     <link href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.0.0/css/bootstrap.min.css" rel="stylesheet" media="screen">
     <link href="http://code.jquery.com/ui/1.10.3/themes/overcast/jquery-ui.css" rel="stylesheet">
+    
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
     <script src="http://malsup.github.io/jquery.blockUI.js"></script>
@@ -30,7 +31,7 @@
 
     <header>
       <div class="container">
-        <h1 class="logo"><center> HICMS </center></h1>
+        <h1 class="logo"><center> Shop HICMS </center></h1>
           <nav class = "navbar navbar-default" role = "navigation">
             <div class = "collapse navbar-collapse navbar-ex1-collapse">
               <ul class="nav navbar-nav navbar-left">
@@ -38,6 +39,7 @@
                
                 {{render_sitem('sa_operation',  ('Operations'), icon_cls='', active=active_page)}}
                 {{render_sitem('profile', ('Profile'), icon_cls='', active=active_page)}}
+                {{render_sitem('settings', ('Settings'), icon_cls='', active=active_page)}}
                 </ul>
               
                 <ul class="nav navbar-nav navbar-right">

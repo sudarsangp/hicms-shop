@@ -12,7 +12,7 @@ Created on Sep 10, 2013
 from CustomerOperations import AddCustomer
 from ManufacturerOperations import AddManufacturer,ViewManufacturers
 from CategoryOperations import AddCategory,ViewCategories
-from ProductOperations import AddProduct, ViewProduct, SearchProductBarcode, UpdateProduct, DeleteProduct,AddDisplayProduct
+from ProductOperations import AddProduct, ViewProduct, SearchProductBarcode, UpdateProduct, DeleteProduct,AddDisplayProduct, SetDiscountBarcode
 from UserOperations import BuyItem
 from TransactionOperations import CreateTransaction,ListTransactions
 from CommunicateWithHQ import UpdateHQServer, GetStockFromHQ, GetPriceFromHQ
@@ -96,3 +96,7 @@ class CommandFactory(object):
         elif operation == "addpricedisplayunit":
             addPDUCommand = AddPDU()
             return addPDUCommand
+
+        elif operation == "setdiscount":
+            setDiscountCommand = SetDiscountBarcode()
+            return setDiscountCommand

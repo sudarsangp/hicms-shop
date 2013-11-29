@@ -4,7 +4,7 @@ from app import app, login_manager
 
 from form.forms import RegisterShopForm, SignupForm, SigninForm, ShopAdminFunction, AddCustomer ,AddManufacturer , AddCategory, AddProduct, BuyItem, HardwareImitater, AddDisplayStock, SearchPDUId,AddDisplayUnit
 
-from form.forms import SearchBarcode, GetStockForm
+from form.forms import SearchBarcode, GetStockForm, SettingsForm, SetDiscount
 
 from model.models import Check, User, db, Customer
 from controller import Logic,InterfaceForPos
@@ -125,6 +125,9 @@ def sa_operation():
     elif operation == "addpricedisplayunit":
       return redirect(url_for('addPduDisplay', operation = operation)) 
     
+    elif operation == "setdiscount":
+      return redirect(url_for('set_discount', operation = operation))
+
     else:
       return "Mapping not yet implemented"
 
@@ -156,6 +159,27 @@ def search_barcode(operation):
 
   elif request.method == 'GET':
     return render_template('searchbarcode.html',form = form)
+
+@app.route('/productdiscount/<operation>', methods = ['POST', 'GET'])
+def set_discount(operation):
+  if 'email' not in session:
+    return redirect(url_for('signin'))
+
+  
+  #if request.method == "POST":
+  #  logicObject = Logic.Logic()
+  form = SetDiscount()
+  if request.method == "POST":
+    logicObject = Logic.Logic()
+    feedback = logicObject.execute(operation,form)
+    return render_template('feedback.html', feedback = feedback)
+  
+  elif request.method == 'GET':
+    return render_template('setdiscount.html',form = form)
+  # this part for dynamic search
+  #logicObject = Logic.Logic()
+  #allproducts = logicObject.execute("viewproducts", None)
+  #return render_template('fordiscountlistinginventory.html', allproducts = allproducts)
 
 @app.route('/displayall/<operation>', methods = ['POST','GET'])
 def view_all_products(operation):
@@ -512,4 +536,38 @@ def send_email(recipientemail, transactiondetail, totalpriceinfo):
   with app.app_context():
     mail.send(msg)
   return "checking"
-        
+
+import datetime, time
+
+@app.route('/settings', methods = ['GET', 'POST'])
+def settings():
+  if 'email' not in session:
+    return redirect(url_for('signin'))
+
+  form = SettingsForm()
+  if request.method == 'POST':
+    fname = "activepricefrequncy.txt"
+    f = open(fname,'w')
+    dataforfile = {}
+    starttimeforfile = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d %H:%M:%S')
+    starttimedelta = datetime.datetime.strptime(starttimeforfile,'%Y-%m-%d %H:%M:%S' )
+    endtimedelta = starttimedelta + datetime.timedelta(minutes = int(form.pricefreq.data))
+    endtimeforfile = endtimedelta.strftime('%Y-%m-%d %H:%M:%S')
+    dataforfile = {}
+    f.write(';')
+    dataforfile['activepricefreq'] = form.pricefreq.data
+    f.write(str(dataforfile))
+    dataforfile = {}
+    f.write(';')
+    dataforfile['starttime'] = starttimeforfile
+    f.write(str(dataforfile))
+    dataforfile = {}
+    f.write(';')
+    dataforfile['endtime'] = endtimeforfile
+    f.write(str(dataforfile))
+    f.close()
+    datasent = "wriiten to file"
+    return render_template('settingsfeedback.html',data = datasent)
+
+  elif request.method == "GET":
+    return render_template('settings.html', form = form)

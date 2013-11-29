@@ -5,7 +5,6 @@
      
 '''
 
-
 from app.model.models import db, Customer,Manufacturers,Category,Products,Transaction, PriceDisplay
 from Feedback import Feedback
 from flask import session
@@ -148,6 +147,7 @@ class StorageClass(object):
             productData.displayQty = productData.displayQty - purchaseQty  
             newTransaction = Transaction(transactionId,customerId,cashierId,transactionDate, enteredBarcode, barcodeQuantityDict[enteredBarcode], soldPrice)
             db.session.add(newTransaction)
+            #db.session.commit()
             self.storageFeedback.setcommandtype("Buy product")
 
             f = open(fname,'a')
@@ -168,7 +168,7 @@ class StorageClass(object):
             self.storageFeedback.setinfo("Transaction Successfully Completed with total price = " + str(totalPrice))
             self.storageFeedback.setdata(productsBought)
             self.storageFeedback.setcommandtype("transaction success")
-            #print totalPrice
+            print totalPrice
             self.storageFeedback.setexecutionstatus(True)
         except IntegrityError as err:
                 self.storageFeedback.setinfo("Transaction Failed due to improper data")
@@ -287,3 +287,33 @@ class StorageClass(object):
     def get_email_for_customer(self, inputid):
         customerdetail = Customer.query.filter_by(customerId = inputid).first()
         return customerdetail.email
+
+    def set_discount_for_barcode(self, enteredBarcode, discount):
+        existingProduct = Products.query.filter_by(barcode = enteredBarcode).first()
+        pricevalue = float(existingProduct.price)
+        #print type(existingProduct.price)
+        pricevalue -= (float(discount)* 0.01 *pricevalue)
+        pricevalue = 0.05*round(pricevalue/0.05)
+        pricevalue = int(pricevalue*100)/100.0
+        existingProduct.price = pricevalue
+        db.session.commit()
+
+        newfile = "pricechange.txt"
+        f = open(newfile,'a')
+        pricedisplayunit = PriceDisplay.query.filter_by(barcode = enteredBarcode).first()
+        data_written = {}
+        final_data = {}
+        data_written['barcode'] = enteredBarcode
+        data_written['pricedisplayid'] = pricedisplayunit.priceDisplayId
+        data_written['price'] = pricevalue
+        data_written['name'] = existingProduct.name
+        final_data['pricedetail'] = data_written
+        f.write(';')
+        f.write(str(final_data))
+        f.close()
+        
+        self.storageFeedback.setinfo("Success Discount set")
+        self.storageFeedback.setdata(pricevalue)
+        self.storageFeedback.setcommandtype("Set discount")
+        return self.storageFeedback
+        #return existingProduct

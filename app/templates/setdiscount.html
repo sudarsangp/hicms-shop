@@ -1,0 +1,13 @@
+{% extends "baselayout.html" %}
+ 
+{% block content %}
+
+<form action="" method = post>
+	Enter Barcode
+	{{ form.barcode }} <br>
+	Enter Discount (%)
+	{{ form.discount }} <br>
+	<input type="submit" value="Submit">
+</form>
+
+{% endblock %}

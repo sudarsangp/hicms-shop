@@ -1,0 +1,17 @@
+{% extends "baselayout.html" %}
+ 
+{% block content %}
+<form action = "" method = "post" role = "form" class="form">
+	<div class="row">
+	<div class = "form-group col-lg-3">	
+		<label class="control-label">Enter Active Price Frquency (in minutes)</label>
+		<div {% if form.pricefreq.errors %} class = "has-error" {% else %} class="" {% endif %} >
+			{{ form.pricefreq(class="form-control") }} 
+		</div>
+	</div>
+	</div>
+	<div class="form-group">
+		<input type="submit" value="Submit" class="btn btn-success">
+	</div>
+</form>
+{% endblock %}

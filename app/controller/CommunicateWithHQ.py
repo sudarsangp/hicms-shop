@@ -13,8 +13,8 @@ class UpdateHQServer(Command):
 		self.json = ToJson()
 	
 	def execute(self, formData):
-		#url = 'http://127.0.0.1:5000/serverinfo'
-		url = 'http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/serverinfo'
+		url = 'http://127.0.0.1:5000/serverinfo'
+		#url = 'http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/serverinfo'
 		testvalue = self.json.retJSON()
 		jdata = json.dumps(testvalue)
 		requests.post(url,data=jdata)
@@ -95,7 +95,8 @@ class GetPriceFromHQ(Command):
 		self.feedbackObject.setdata("new price")
 		self.feedbackObject.setcommandtype("GetStockFromHQ")
 		list_bar_price = allbarprice['barcodeprice']
-		#print list_bar_price
+		print list_bar_price
+		print len(list_bar_price)
 		for i in range(len(list_bar_price)):
 			bar_price_info = literal_eval(json.dumps(list_bar_price[i]))
 			in_barcode = bar_price_info['barcode']
@@ -103,13 +104,14 @@ class GetPriceFromHQ(Command):
 			#print in_barcode, in_newprice
 			actual = self.storageObject.data_check_product(in_barcode)
         	#actual = not inverted
-        	print actual
+        	#print actual
         	if actual:
 				self.storageObject.set_price_from_hq(in_barcode, in_newprice)
+				print in_newprice, in_barcode
 				self.feedbackObject.setinfo("Success: price got")
 				self.feedbackObject.setdata("new price")
 				self.feedbackObject.setcommandtype("GetStockFromHQ")
-				print "insdie actual"
+				#print "insdie actual"
 			#else:
 
 			#	self.feedbackObject.setinfo("Failed: barcode not found ")
