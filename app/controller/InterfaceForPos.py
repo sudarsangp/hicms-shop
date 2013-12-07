@@ -34,7 +34,6 @@ class InterfaceForPos(object):
              barcodeQtyDict[result[x]] = result[x+1] 
              x = x + 2   
              
-            
         return barcodeQtyDict
           
     
@@ -44,6 +43,16 @@ class InterfaceForPos(object):
             print "Product not present"
             
         else:
-            return productEntered.price     
+            return productEntered.displayPrice
     
-    
+    def getCashiers(self):
+        cashiers_all = self.storageObject.get_cashier_id_from_db()
+        return cashiers_all
+
+    def getQuantityForBarcode(self,barcode):
+        productEntered = self.storageObject.get_product_for_barcode(barcode)
+        if productEntered is None:
+            print "Product not present"
+            
+        else:
+            return productEntered.displayQty

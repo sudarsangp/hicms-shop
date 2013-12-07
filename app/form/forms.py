@@ -16,8 +16,6 @@ def validateNumber(form,field):
     raise ValidationError('please enter only numbers')
 
 
-
-
 class RegisterShopForm(Form):
 	shopname = TextField('shopname', validators = [validators.Required()])
 	location = TextField('location', validators = [validators.Required()])
@@ -107,8 +105,18 @@ class AddDisplayUnit(Form):
    
    def __init__(self, *args, **kwargs):
        Form.__init__(self, *args, **kwargs)
-        
+   
+   def validateNotEmpty(self,field):
+    s = field.data
+    s = s.replace(' ','')
+    if len(s) == 0:
+      return 'Cannot give empty space'
   
+   def validateNumber(form,field):
+    s = field.data
+    if re.match("^\d+$",s) is None:
+      return 'please enter only numbers'
+
 ################################################################################################################################################
 class SignupForm(Form):
   firstname = TextField("First name",  [validators.Required("Please enter your first name.")])

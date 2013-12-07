@@ -171,6 +171,7 @@ def set_discount(operation):
   form = SetDiscount()
   if request.method == "POST":
     logicObject = Logic.Logic()
+    print form.discount.data
     feedback = logicObject.execute(operation,form)
     return render_template('feedback.html', feedback = feedback)
   
@@ -402,7 +403,7 @@ def shop_server_info():
   return render_template('feedback.html', feedback  = feedback)
   
 def get_from_shop(barcode,quantity):
-  urldest = 'http://637f50b2.ngrok.com/getfromshop'
+  urldest = 'http://g10cg3002.ngrok.com/getfromshop'
   bar_quant = {'barcode':barcode,'quantity':quantity}
   send_data = {'barcodequantity':bar_quant}
   print barcode, quantity
@@ -430,6 +431,10 @@ def hardwareImitater():
       barcode_in = feedback.getinfo()
       quantity_in = feedback.getdata()
       feedback.setinfo(get_from_shop(barcode_in, quantity_in))
+      storageObject = StorageClass()
+      customerid = form.customerId.data
+      emailid = storageObject.get_email_for_customer(customerid)
+      send_customer_neighbour(feedback.getinfo(), emailid)
     elif feedback.getcommandtype() == "transaction success":
       storageObject = StorageClass()
       customerid = form.customerId.data
@@ -507,6 +512,21 @@ def addPduDisplay(operation):
   form = AddDisplayUnit()
      
   if request.method == "POST":
+
+      form_validation = form.validateNotEmpty(form.displayId)
+      if str(form_validation) == 'Cannot give empty space':
+        return render_template('errorstatus.html', statusmessage = form_validation + " for displayid" , redirecturl = '/addpduunit/addpricedisplayunit')
+      form_validation = form.validateNumber(form.displayId)
+      if str(form_validation) == 'please enter only numbers':
+        return render_template('errorstatus.html', statusmessage = form_validation + " for displayid" , redirecturl = '/addpduunit/addpricedisplayunit')
+      
+      form_validation = form.validateNotEmpty(form.barcode)
+      if str(form_validation) == 'Cannot give empty space':
+        return render_template('errorstatus.html', statusmessage = form_validation + " for barcode" , redirecturl = '/addpduunit/addpricedisplayunit')
+      form_validation = form.validateNumber(form.barcode)
+      if str(form_validation) == 'please enter only numbers':
+        return render_template('errorstatus.html', statusmessage = form_validation + " for barcode" , redirecturl = '/addpduunit/addpricedisplayunit')
+
       logicObject = Logic.Logic()
       feedback = logicObject.execute(operation,form)
 
@@ -523,19 +543,33 @@ from config import ADMINS,RECIPIENTS
 def send_email(recipientemail, transactiondetail, totalpriceinfo):
   if 'email' not in session:
     return redirect(url_for('signin'))
-  transactionfinal = "<b> Transaction Details </b> <br>"
+  transactionfinal = "<b> Transaction Details </b> </thead>"
   list_recipient = list()
   list_recipient.append(recipientemail)
+  transactionfinal += '<table> <thead> <tr> <th> Barcode </th> <th> Quantity </th> <th> Price </th> </tr> </thead> <tbody> '
   for eachbarcodedetail in transactiondetail:
     print eachbarcodedetail
     detailinfo = eachbarcodedetail.split(',')
-    transactionfinal += " Barcode " + '<b>' + str(detailinfo[0]) + '</b>' + " Quantity " + '<b>' + str(detailinfo[1]) + '</b>' + " Price " +  '<b>' + str(detailinfo[2]) + '</b>' + '<br>'
+    transactionfinal += '<tr>' + '<td>' + str(detailinfo[0]) + '</td>' + '<td>' + str(detailinfo[1]) + '</td>' +  '<td>' + str(detailinfo[2]) + '</td> </tr>'
+  transactionfinal += '</tbody> </table>'
   msg = Message("Transaction Details", sender = ADMINS[0], recipients = list_recipient)
   msg.body = 'text body'
   msg.html = transactionfinal + '<br>' + '<b>' + str(totalpriceinfo) + '</b>' + '<br>'
   with app.app_context():
     mail.send(msg)
   return "checking"
+
+def send_customer_neighbour(details, emailid):
+  if 'email' not in session:
+    return redirect(url_for('signin'))
+
+  list_recipient = list()
+  list_recipient.append(emailid)
+  msg = Message("Neighbour Shop Information", sender = ADMINS[0], recipients = list_recipient)
+  msg.body = 'text body'
+  msg.html = details
+  with app.app_context():
+    mail.send(msg)
 
 import datetime, time
 

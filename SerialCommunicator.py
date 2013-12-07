@@ -70,8 +70,8 @@ def parseSerialInput(receivedSerialData):
             opcode_transactionDetails = parts[2]
             with app.test_request_context():    
                 form = HardwareImitater()
-                form.transactionDate.data = "2013-11-29"
-                form.cashierId.data = "4256"
+                form.transactionDate.data = "2013-09-30"
+                form.cashierId.data = id_string
                 form.customerId.data = "1"
                 form.barcode.data = opcode_transactionDetails 
                 dummyPosInterface = InterfaceForPos.InterfaceForPos()
@@ -80,7 +80,8 @@ def parseSerialInput(receivedSerialData):
                 logicObject = Logic.Logic()
                 form.barcode.data = newBarcodeQtyDict
                 feedback = logicObject.execute('hwImitateBuy',form)
-            
+                return
+
 if __name__ == '__main__':
 
 #     while True:    
@@ -88,21 +89,27 @@ if __name__ == '__main__':
 #         x = ser.read()
 #         print x
          
-     ser = serial.Serial('COM10')
+     ser = serial.Serial('COM10',timeout=0.1)
 #     x = ser.write('#11;1;\n')
 #     x = ser.write('#14;5;3\n') 
 #    print x
-     
-      
+     posInterface1 = InterfaceForPos.InterfaceForPos()
+     cashier_id_list = posInterface1.getCashiers()
+     list_cashierids = list()
+     for cashier in cashier_id_list:
+        list_cashierids.append(cashier.cashierId)
       
      while True:
          sendPriceChange()
+         for eachcashier in list_cashierids:
          #print "in infinte"
-         x = ser.write('#11;1;\n')
-         time.sleep(0.1)
-         #y = ser.readline()
-         #print y
-         #parseSerialInput(y)
+             #print str(eachcashier)
+             x = ser.write('#'+str(eachcashier) + '1;1;\n')
+             
+             y = ser.readline()
+             print y
+             if(y):
+                parseSerialInput(y)
          #print "end of infinte"
              
       

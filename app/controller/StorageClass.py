@@ -5,7 +5,7 @@
      
 '''
 
-from app.model.models import db, Customer,Manufacturers,Category,Products,Transaction, PriceDisplay
+from app.model.models import db, Customer,Manufacturers,Category,Products,Transaction, PriceDisplay, Cashiers
 from Feedback import Feedback
 from flask import session
 from sqlalchemy import desc
@@ -144,7 +144,18 @@ class StorageClass(object):
                     self.storageFeedback.setdata(purchaseQty)
                     return self.storageFeedback
             
-            productData.displayQty = productData.displayQty - purchaseQty  
+            productData.displayQty = productData.displayQty - purchaseQty
+            newProductBoughtPrice = int(barcodeQuantityDict[enteredBarcode])*soldPrice
+
+            
+            #print newProductBoughtPrice
+            
+            soldPriceFinal = newProductBoughtPrice
+            if (purchaseQty >= productData.bundleUnit and productData.bundleUnit > 0):
+                soldPriceFinal = self.bundle_unit_discount(newProductBoughtPrice,10)
+                soldPrice = self.bundle_unit_discount(soldPrice,10)
+            #print soldPrice
+            productsBought.append(str(enteredBarcode)+ ',' + str(barcodeQuantityDict[enteredBarcode]) + ',' + str(soldPriceFinal  ) )
             newTransaction = Transaction(transactionId,customerId,cashierId,transactionDate, enteredBarcode, barcodeQuantityDict[enteredBarcode], soldPrice)
             db.session.add(newTransaction)
             #db.session.commit()
@@ -157,10 +168,8 @@ class StorageClass(object):
             f.write(str(barcodedict))
             f.close() 
             # These are for output
-            newProductBoughtPrice = int(barcodeQuantityDict[enteredBarcode])*soldPrice
-            productsBought.append(str(enteredBarcode)+ ',' + str(barcodeQuantityDict[enteredBarcode]) + ',' + str(newProductBoughtPrice  ) )
-                        
-            totalPrice = totalPrice + newProductBoughtPrice
+            totalPrice = totalPrice + soldPriceFinal
+            
             
             #print productsBought
         try:             
@@ -220,7 +229,6 @@ class StorageClass(object):
         priceDisplay = PriceDisplay.query.all()
         return priceDisplay
 
-
     def delete_product_info(self, enteredBarcode):
         producttodelete = Products.query.filter_by(barcode = enteredBarcode).first()
         db.session.delete(producttodelete)
@@ -235,7 +243,7 @@ class StorageClass(object):
             self.storageFeedback.setcommandtype("add display stock")
             self.storageFeedback.setdata("None")
         
-        elif int(productToIncreaseDisplay.currentStock) > int(0.9 * productToIncreaseDisplay.minStock):
+        elif int(productToIncreaseDisplay.currentStock) < int(0.9 * productToIncreaseDisplay.minStock):
             self.storageFeedback.setinfo("restock required reaching below 90 percent of minstock")
             self.storageFeedback.setdata("90 % of minstock is " + str(int(0.9 * productToIncreaseDisplay.minStock)))
             self.storageFeedback.setcommandtype("add display stock")
@@ -279,13 +287,17 @@ class StorageClass(object):
     def addPriceDisplayUnit(self,formData):
         product = Products.query.filter_by(barcode = formData.barcode.data).first()
         if product is None:
-           self.storageFeedback.setinfo("Sorry Product does not exist with barcode " + barcode)     
-        
+           self.storageFeedback.setinfo("Sorry Product does not exist with barcode " + formData.barcode.data)     
+           return self.storageFeedback
         else:
-           newPriceDisplay = PriceDisplay(formData.displayId.data,formData.barcode.data)
-           db.session.add(newPriceDisplay)
-           db.session.commit()
-           self.storageFeedback.setinfo("PDU successfully added")  
+           existingPd = PriceDisplay.query.filter_by(priceDisplayId = formData.displayId.data).first()
+           if existingPd is None:
+            newPriceDisplay = PriceDisplay(formData.displayId.data,formData.barcode.data)
+            db.session.add(newPriceDisplay)
+            db.session.commit()
+            self.storageFeedback.setinfo("PDU successfully added")
+           else:
+            self.storageFeedback.setinfo("PDU id exists already")
            
            return self.storageFeedback
 
@@ -302,12 +314,12 @@ class StorageClass(object):
 
     def set_discount_for_barcode(self, enteredBarcode, discount):
         existingProduct = Products.query.filter_by(barcode = enteredBarcode).first()
-        pricevalue = float(existingProduct.price)
+        pricevalue = float(existingProduct.displayPrice)
         #print type(existingProduct.price)
         pricevalue -= (float(discount)* 0.01 *pricevalue)
         pricevalue = 0.05*round(pricevalue/0.05)
         pricevalue = int(pricevalue*100)/100.0
-        existingProduct.price = pricevalue
+        existingProduct.displayPrice = pricevalue
         db.session.commit()
 
         newfile = "pricechange.txt"
@@ -329,3 +341,14 @@ class StorageClass(object):
         self.storageFeedback.setcommandtype("Set discount")
         return self.storageFeedback
         #return existingProduct
+
+    def get_cashier_id_from_db(self):
+        existingCashiers = Cashiers.query.all()
+        return existingCashiers
+
+    def bundle_unit_discount(self, price, bundleDiscount):
+        pricevalue = price
+        pricevalue -= (float(bundleDiscount)* 0.01 *pricevalue)
+        pricevalue = 0.05*round(pricevalue/0.05)
+        pricevalue = int(pricevalue*100)/100.0
+        return pricevalue

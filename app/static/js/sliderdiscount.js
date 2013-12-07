@@ -5,8 +5,8 @@ $(function() {
       min: 0,
       max: 50,
       slide: function( event, ui ) {
-        $( "#amount" ).val(  ui.value + "%" );
+        $( "#discount" ).val(  ui.value );
       }
     });
-    $( "#amount" ).val(  $( "#slider-range-min" ).slider( "value" ) + "%" );
+    $( "#discount" ).val(  $( "#slider-range-min" ).slider( "value" )  );
   });

@@ -40,8 +40,8 @@ class GetStockFromHQ(Command):
         return barcodeQtyDict
 
     def execute(self, formData):
-        url = 'http://127.0.0.1:5000/getstock'
-        #url = 'http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/getstock'
+        #url = 'http://127.0.0.1:5000/getstock'
+        url = 'http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/getstock'
         dict_bar_quantity = self.parsebarcodequantity(formData)
         #givenbarcode = formData.barcode.data
         #givenquantity = formData.quantity.data
@@ -84,8 +84,8 @@ class GetPriceFromHQ(Command):
         self.feedbackObject = Feedback()
 
     def execute(self, formData):
-        url = 'http://127.0.0.1:5000/getprice'
-        #url = 'http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/getprice'
+        #url = 'http://127.0.0.1:5000/getprice'
+        url = 'http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/getprice'
         #givenbarcode = formData.barcode.data
         #send_bar = {'barcode': givenbarcode}
         #jsend = json.dumps(send_bar)
