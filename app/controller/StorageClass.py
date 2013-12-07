@@ -11,6 +11,7 @@ from flask import session
 from sqlalchemy import desc
 from sqlalchemy.exc import IntegrityError
 
+
 fname = 'stockdata.txt'
 
 class StorageClass(object):
@@ -213,8 +214,8 @@ class StorageClass(object):
         
         return lastTransaction.first().transactionId
     
-    def getTransactions(self):
-        transactions = Transaction.query.all()
+    def getTransactions(self,page,ppp):
+        transactions = Transaction.query.paginate(page,ppp,False)
         return transactions
 
     def getPriceDisplayById(self, givenID):
@@ -328,7 +329,7 @@ class StorageClass(object):
         data_written = {}
         final_data = {}
         data_written['barcode'] = enteredBarcode
-        data_written['pricedisplayid'] = pricedisplayunit.priceDisplayId
+        data_written['pricedisplayid'] = 'p'+ str(pricedisplayunit.priceDisplayId)
         data_written['price'] = pricevalue
         data_written['name'] = existingProduct.name
         final_data['pricedetail'] = data_written

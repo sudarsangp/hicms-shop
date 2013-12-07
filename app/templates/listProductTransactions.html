@@ -15,7 +15,7 @@
 	</tr>
 </thead>
 <tbody>
-{% for transactionObj in allTransactions %}
+{% for transactionObj in allTransactions.items %}
 <tr>
 <td>{{ transactionObj.transactionId }} </td>
 <td>{{ transactionObj.customerId }}  </td>
@@ -27,5 +27,7 @@
 </tr>
 {% endfor %}
 </tbody>
+{% if allTransactions.has_prev %}<a href="{{ url_for('view_all_transactions', page = allTransactions.prev_num) }}"><< Previous Page</a>{% else %}<< Previous Page{% endif %} | 
+{% if allTransactions.has_next %}<a href="{{ url_for('view_all_transactions', page = allTransactions.next_num) }}">Next Page>></a>{% else %}Next Page >>{% endif %}
 </table> 
 {% endblock %}

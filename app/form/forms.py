@@ -91,14 +91,36 @@ class SearchBarcode(Form):
 
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
-    
+  
+  def validateNotEmpty(self,field):
+    s = field.data
+    s = s.replace(' ','')
+    if len(s) == 0:
+      return 'Cannot give empty space'
+  
+  def validateNumber(form,field):
+    s = field.data
+    if re.match("^\d+$",s) is None:
+      return 'please enter only numbers'
+
 class AddDisplayStock(Form):    
   barcode = TextField('barcode')
   quantity = TextField('quantity')
 
   def __init__(self, *args, **kwargs):
     Form.__init__(self, *args, **kwargs)
-    
+  
+  def validateNotEmpty(self,field):
+    s = field.data
+    s = s.replace(' ','')
+    if len(s) == 0:
+      return 'Cannot give empty space'
+  
+  def validateNumber(form,field):
+    s = field.data
+    if re.match("^\d+$",s) is None:
+      return 'please enter only numbers'
+
 class AddDisplayUnit(Form):
    displayId = TextField('displayId')
    barcode = TextField('barcode')
@@ -190,6 +212,17 @@ class SearchPDUId(Form):
       def __init__(self, *args, **kwargs):
         Form.__init__(self, *args, **kwargs)
 
+      def validateNotEmpty(self,field):
+        s = field.data
+        s = s.replace(' ','')
+        if len(s) == 0:
+          return 'Cannot give empty space'
+  
+      def validateNumber(form,field):
+        s = field.data
+        if re.match("^\d+$",s) is None:
+          return 'please enter only numbers'
+
 class SettingsForm(Form):
   pricefreq = TextField('pricefreq')
   
@@ -201,3 +234,14 @@ class SetDiscount(Form):
   discount = TextField('discount')
   def __init__(self, *args, **kwargs): # needed for importing in view.py
       Form.__init__(self, *args, **kwargs)
+
+  def validateNotEmpty(self,field):
+        s = field.data
+        s = s.replace(' ','')
+        if len(s) == 0:
+          return 'Cannot give empty space'
+  
+  def validateNumber(form,field):
+    s = field.data
+    if re.match("^\d+$",s) is None:
+      return 'please enter only numbers'

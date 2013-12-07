@@ -14,6 +14,8 @@ from controller.StorageClass import StorageClass
 import json, requests
 from ast import literal_eval
 
+from config import POSTS_PER_PAGE
+
 @app.route('/check')
 def default():
   return render_template("baselayout.html")
@@ -105,7 +107,7 @@ def sa_operation():
       return redirect(url_for('submit_transaction', operation = operation))
 
     elif operation == "viewproducttransactions":
-      return redirect(url_for('view_all_transactions', operation = operation))  
+      return redirect(url_for('view_all_transactions', page = 1))  
 
     elif operation == "viewpdubyid":
       return redirect(url_for('pdudisplaybyid', operation = operation))
@@ -150,6 +152,13 @@ def search_barcode(operation):
 
   form = SearchBarcode()
   if request.method == "POST":
+    form_validation = form.validateNotEmpty(form.barcode)
+    if str(form_validation) == 'Cannot give empty space':
+      return render_template('errorstatus.html', statusmessage = form_validation + " for barcode" , redirecturl = '/productsearch/searchBarcode')
+    form_validation = form.validateNumber(form.barcode)
+    if str(form_validation) == 'please enter only numbers':
+      return render_template('errorstatus.html', statusmessage = form_validation + " for barcode" , redirecturl = '/productsearch/searchBarcode')
+    
     logicObject = Logic.Logic()
     productobj = logicObject.execute(operation,form)
     if productobj:
@@ -158,6 +167,7 @@ def search_barcode(operation):
       return redirect(url_for('defaulterror'))
 
   elif request.method == 'GET':
+    print "in get request"
     return render_template('searchbarcode.html',form = form)
 
 @app.route('/productdiscount/<operation>', methods = ['POST', 'GET'])
@@ -170,6 +180,14 @@ def set_discount(operation):
   #  logicObject = Logic.Logic()
   form = SetDiscount()
   if request.method == "POST":
+
+    form_validation = form.validateNotEmpty(form.barcode)
+    if str(form_validation) == 'Cannot give empty space':
+      return render_template('errorstatus.html', statusmessage = form_validation + " for barcode" , redirecturl = '/productdiscount/setdiscount')
+    form_validation = form.validateNumber(form.discount)
+    if str(form_validation) == 'please enter only numbers':
+      return render_template('errorstatus.html', statusmessage = form_validation + " for discount" , redirecturl = '/productdiscount/setdiscount')
+
     logicObject = Logic.Logic()
     print form.discount.data
     feedback = logicObject.execute(operation,form)
@@ -190,14 +208,18 @@ def view_all_products(operation):
   logicObject = Logic.Logic()
   allproducts = logicObject.execute(operation, None)
   return render_template('listinginventory.html', allproducts = allproducts)
-  
-@app.route('/productTransactionsDisplayAll/<operation>', methods = ['POST','GET'])
-def view_all_transactions(operation):
+
+
+#@app.route('/productTransactionsDisplayAll/viewproducttransactions', methods = ['POST','GET'])
+@app.route('/productTransactionsDisplayAll/<int:page>',methods = ['POST','GET'])
+def view_all_transactions(page = 1):
   if 'email' not in session:
     return redirect(url_for('signin'))
 
+  storageObject = StorageClass()
   logicObject = Logic.Logic()
-  allTransactions = logicObject.execute(operation, None)
+  #allTransactions = logicObject.execute("viewproducttransactions", None)
+  allTransactions = storageObject.getTransactions(page,POSTS_PER_PAGE)
   return render_template('listProductTransactions.html', allTransactions = allTransactions)   
 
 @app.route('/customer/<operation>', methods = ['POST', 'GET'])
@@ -294,6 +316,21 @@ def add_Display_Stock(operation):
 
   form = AddDisplayStock()  
   if request.method == 'POST':
+
+    form_validation = form.validateNotEmpty(form.barcode)
+    if str(form_validation) == 'Cannot give empty space':
+      return render_template('errorstatus.html', statusmessage = form_validation + " for barcode" , redirecturl = '/adddisplaystock/adddisplaystock')
+    form_validation = form.validateNumber(form.barcode)
+    if str(form_validation) == 'please enter only numbers':
+      return render_template('errorstatus.html', statusmessage = form_validation + " for barcode" , redirecturl = '/adddisplaystock/adddisplaystock')
+
+    form_validation = form.validateNotEmpty(form.quantity)
+    if str(form_validation) == 'Cannot give empty space':
+      return render_template('errorstatus.html', statusmessage = form_validation + " for quantity" , redirecturl = '/adddisplaystock/adddisplaystock')
+    form_validation = form.validateNumber(form.quantity)
+    if str(form_validation) == 'please enter only numbers':
+      return render_template('errorstatus.html', statusmessage = form_validation + " for quantity" , redirecturl = '/adddisplaystock/adddisplaystock')
+
     logicObject = Logic.Logic()
     feedback = logicObject.execute('adddisplaystock',form)
     return render_template('feedback.html', feedback = feedback)
@@ -308,6 +345,9 @@ def buyitem():
 
   form = BuyItem()
   if request.method == 'POST':
+    if form.validate() == False:
+      return render_template('buyitem.html', form=form)
+
     logicObject = Logic.Logic()
     feedback = logicObject.execute('buyitem',form)
     return render_template('feedback.html', feedback = feedback)
@@ -320,7 +360,7 @@ def defaulterror():
   if 'email' not in session:
     return redirect(url_for('signin'))
 
-  return "Data not present"
+  return render_template('errorstatus.html', statusmessage = "data not present" , redirecturl = '/saoperation')
 
 #to check the database part works fine
 @app.route('/db')
@@ -452,6 +492,7 @@ def request_stock(operation):
 
   form = GetStockForm()
   if request.method == "POST":
+
     logicObject = Logic.Logic()
     #newBarcodeQtyDict = logicObject.parsebarcodequantity(form)
     #form.barcode.data = newBarcodeQtyDict
@@ -494,6 +535,14 @@ def pdudisplaybyid(operation):
 
   form = SearchPDUId()
   if request.method == "POST":
+
+    form_validation = form.validateNotEmpty(form.Id)
+    if str(form_validation) == 'Cannot give empty space':
+      return render_template('errorstatus.html', statusmessage = form_validation + " for pduid" , redirecturl = '/pdudisplaybyid/viewpdubyid')
+    form_validation = form.validateNumber(form.Id)
+    if str(form_validation) == 'please enter only numbers':
+      return render_template('errorstatus.html', statusmessage = form_validation + " for pduid" , redirecturl = '/pdudisplaybyid/viewpdubyid')
+
     logicObject = Logic.Logic()
     pduObj = logicObject.execute(operation,form)
 

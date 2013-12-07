@@ -2,10 +2,18 @@
  
 {% block content %}
 
-<form action="" method = post>
-	Enter Barcode
-	{{ form.barcode }} <br>
-		
-	<input type="submit" value="Submit">
+<form action="" method="post"  role = "form" class="form">
+	<div class="row">
+	<div class = "form-group col-lg-3">	
+		<label class="control-label">Enter Barcode </label>
+		<div {% if form.barcode.errors %} class = "has-error" {% else %} class="" {% endif %} >
+			{{ form.barcode(class="form-control") }} 
+		</div>
+	</div>
+	</div>
+	<div class="form-group">
+		<input type="submit" value="Submit" class="btn btn-info">
+	</div>
 </form>
+
 {% endblock %}

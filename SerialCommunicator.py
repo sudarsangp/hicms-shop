@@ -3,7 +3,7 @@ from app.form.forms import HardwareImitater
 from app import app
 from ast import literal_eval
 import serial
-import time
+import time, datetime
 import os
 
 def sendPriceChange():
@@ -28,7 +28,8 @@ def sendPriceChange():
        pricedisplayid = serialdetail['pricedisplayid']
        print price, barcode, name, pricedisplayid
        
-       stringToSend = '#' + str(pricedisplayid) + ' Barcode:' +  str(barcode) + '                        ' + 'Price:$' +str(price) + '\n'
+       stringToSend = '#' + str(pricedisplayid) + 'Barcode:' +  str(barcode) + '                        ' + 'Price:$' +str(price) + '\n'
+       print stringToSend
        x = ser.write(stringToSend)
        time.sleep(0.1)
     open(fname,'w').close()
@@ -70,9 +71,9 @@ def parseSerialInput(receivedSerialData):
             opcode_transactionDetails = parts[2]
             with app.test_request_context():    
                 form = HardwareImitater()
-                form.transactionDate.data = "2013-09-30"
+                form.transactionDate.data = datetime.datetime.fromtimestamp(time.time()).strftime('%Y-%m-%d')
                 form.cashierId.data = id_string
-                form.customerId.data = "1"
+                form.customerId.data = "4"
                 form.barcode.data = opcode_transactionDetails 
                 dummyPosInterface = InterfaceForPos.InterfaceForPos()
                 newBarcodeQtyDict =  dummyPosInterface.parseForSoftwareImitater(form)
@@ -100,7 +101,7 @@ if __name__ == '__main__':
         list_cashierids.append(cashier.cashierId)
       
      while True:
-         sendPriceChange()
+         #sendPriceChange()
          for eachcashier in list_cashierids:
          #print "in infinte"
              #print str(eachcashier)

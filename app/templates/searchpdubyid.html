@@ -1,11 +1,18 @@
 {% extends "baselayout.html" %}
 
 {% block content %}
-
-<form action = ""  method = post>
-	Enter PDU ID
-	{{ form.Id }} <br>
-
-	<input type = "submit" value = "Search ID">
+<form action="" method="post"  role = "form" class="form">
+	<div class="row">
+	<div class = "form-group col-lg-3">	
+		<label class="control-label">Enter PDU ID </label>
+		<div {% if form.Id.errors %} class = "has-error" {% else %} class="" {% endif %} >
+			{{ form.Id(class="form-control") }} 
+		</div>
+	</div>
+	</div>
+	<div class="form-group">
+		<input type="submit" value="Search ID" class="btn btn-info">
+	</div>
 </form>
+
 {% endblock %}
