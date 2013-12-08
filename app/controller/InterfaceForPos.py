@@ -45,7 +45,7 @@ class InterfaceForPos(object):
         productEntered = self.storageObject.get_product_for_barcode(barcode)
         if productEntered is None:
             print "Product not present"
-            
+            return -1
         else:
             return productEntered.displayPrice
     
@@ -88,6 +88,7 @@ class InterfaceForPos(object):
         responsestatus = r.json()
         shopidvalue = responsestatus['shopid']
         messageforemail = responsestatus['status']
+        print messageforemail
         if str(messageforemail) == "cannot":
             shopidvalue = 0
         return shopidvalue

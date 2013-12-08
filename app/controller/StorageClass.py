@@ -146,6 +146,8 @@ class StorageClass(object):
                     return self.storageFeedback
             
             productData.displayQty = productData.displayQty - purchaseQty
+            if int(productData.displayQty) == 0:
+                productData.displayPrice = productData.price
             newProductBoughtPrice = int(barcodeQuantityDict[enteredBarcode])*soldPrice
 
             
