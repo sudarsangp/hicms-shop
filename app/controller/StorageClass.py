@@ -353,3 +353,5 @@ class StorageClass(object):
         pricevalue = 0.05*round(pricevalue/0.05)
         pricevalue = int(pricevalue*100)/100.0
         return pricevalue
+
+    

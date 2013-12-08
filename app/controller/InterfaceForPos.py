@@ -1,6 +1,6 @@
 from StorageClass import StorageClass
 from Feedback import Feedback
-
+import json, requests
 
 class InterfaceForPos(object):
     '''
@@ -56,3 +56,32 @@ class InterfaceForPos(object):
             
         else:
             return productEntered.displayQty
+
+    def from_cashier_internshop(self, enteredBarcode, enteredQuantity):
+        productData = self.storageObject.get_product_for_barcode(enteredBarcode)
+        #print type(productData.currentStock), productData.currentStock
+        #print type(enteredQuantity) , enteredQuantity
+        if productData.currentStock >= long(enteredQuantity):
+            #self.storageFeedback.setcommandtype("Transaction")
+            #self.storageFeedback.setinfo("Move quantity from current stock to displayQty")
+            #self.storageFeedback.setdata("cannot buy from displayQty")
+            shopidsame = 5
+            return shopidsame
+        else:                    
+            #self.storageFeedback.setcommandtype("Ask other shop")
+            #self.storageFeedback.setinfo(enteredBarcode)
+            #self.storageFeedback.setdata(enteredQuantity)
+            shopidreturn = self.get_from_shop(enteredBarcode, enteredQuantity)
+            return shopidreturn
+
+    def get_from_shop(self, barcode,quantity):
+        urldest = 'http://g10cg3002.ngrok.com/getfromshop'
+        bar_quant = {'barcode':barcode,'quantity':quantity}
+        send_data = {'barcodequantity':bar_quant}
+        print barcode, quantity
+        jsend = json.dumps(send_data)
+        r = requests.get(urldest,data = jsend)
+        responsestatus = r.json()
+        shopidvalue = responsestatus['shopid']
+        messageforemail = responsestatus['status']
+        return shopidvalue

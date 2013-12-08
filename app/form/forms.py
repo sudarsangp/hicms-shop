@@ -229,6 +229,17 @@ class SettingsForm(Form):
   def __init__(self, *args, **kwargs): # needed for importing in view.py
       Form.__init__(self, *args, **kwargs)
 
+  def validateNotEmpty(self,field):
+    s = field.data
+    s = s.replace(' ','')
+    if len(s) == 0:
+      return 'Cannot give empty space'
+  
+  def validateNumber(form,field):
+    s = field.data
+    if re.match("^\d+$",s) is None:
+      return 'please enter only integers'
+
 class SetDiscount(Form):
   barcode = TextField('barcode')
   discount = TextField('discount')

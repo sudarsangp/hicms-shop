@@ -629,6 +629,13 @@ def settings():
 
   form = SettingsForm()
   if request.method == 'POST':
+    form_validation = form.validateNotEmpty(form.pricefreq)
+    if str(form_validation) == 'Cannot give empty space':
+      return render_template('errorstatus.html', statusmessage = form_validation + " for time" , redirecturl = '/settings')
+    form_validation = form.validateNumber(form.pricefreq)
+    if str(form_validation) == 'please enter only numbers':
+      return render_template('errorstatus.html', statusmessage = form_validation + " for time" , redirecturl = '/settings')
+
     fname = "activepricefrequncy.txt"
     f = open(fname,'w')
     dataforfile = {}

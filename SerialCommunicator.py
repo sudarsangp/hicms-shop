@@ -83,6 +83,17 @@ def parseSerialInput(receivedSerialData):
                 feedback = logicObject.execute('hwImitateBuy',form)
                 return
 
+        elif opcode == 8: # Intershop request
+            barcodeNeeded = parts[2]
+            quantity = parts[3]
+            responseOpcode = '9'
+            interface_object = InterfaceForPos.InterfaceForPos()
+            shopidvalue = interface_object.from_cashier_internshop(barcodeNeeded,quantity)
+            responseToSend = '#' + id_string + responseOpcode + ';' + str(shopidvalue) + ';' + '\n'
+
+            print responseToSend
+            no_of_char = ser.write(responseToSend)
+
 if __name__ == '__main__':
 
 #     while True:    
