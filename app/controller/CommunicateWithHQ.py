@@ -13,8 +13,8 @@ class UpdateHQServer(Command):
         self.json = ToJson()
     
     def execute(self, formData):
-        url = 'http://127.0.0.1:5000/serverinfo'
-        #url = 'http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/serverinfo'
+        #url = 'http://127.0.0.1:5000/serverinfo'
+        url = 'http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/serverinfo'
         testvalue = self.json.retJSON()
         jdata = json.dumps(testvalue)
         #requests.post(url,data=jdata)

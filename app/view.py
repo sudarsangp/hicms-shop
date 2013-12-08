@@ -378,8 +378,8 @@ def shop_server_info():
 
   #fromhq = request.data
   #change to this one for final demo
-  #fromhq = requests.get('http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/download')
-  fromhq = requests.get('http://127.0.0.1:5000/download')
+  fromhq = requests.get('http://ec2-54-213-168-121.us-west-2.compute.amazonaws.com/download')
+  #fromhq = requests.get('http://127.0.0.1:5000/download')
   #alldata = json.loads(fromhq)
   alldata = fromhq.json()
   feedback = Feedback()
