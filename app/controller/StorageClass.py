@@ -354,4 +354,7 @@ class StorageClass(object):
         pricevalue = int(pricevalue*100)/100.0
         return pricevalue
 
+    def getCustomerId(self,customerId):
+        idQuery = Customer.query.filter_by(customerId = customerId).first()
+        return idQuery
     

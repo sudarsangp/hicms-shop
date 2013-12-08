@@ -132,7 +132,7 @@ def sa_operation():
 
     elif operation == "addcustomer":
       return redirect(url_for('addcustomer', operation = operation ))
-      
+
     else:
       return render_template('errorstatus.html', statusmessage =  " Select a button " , redirecturl = '/saoperation')
 
@@ -170,7 +170,7 @@ def search_barcode(operation):
       return redirect(url_for('defaulterror'))
 
   elif request.method == 'GET':
-    print "in get request"
+    #print "in get request"
     return render_template('searchbarcode.html',form = form)
 
 @app.route('/productdiscount/<operation>', methods = ['POST', 'GET'])
