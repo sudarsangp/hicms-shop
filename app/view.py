@@ -101,7 +101,7 @@ def sa_operation():
       return redirect(url_for('search_barcode',operation = operation))
 
     elif operation == "viewproducts":
-      return redirect(url_for('view_all_products', operation = operation))
+      return redirect(url_for('view_all_products', page = 1))
 
     elif operation == "submittransaction":
       return redirect(url_for('submit_transaction', operation = operation))
@@ -130,8 +130,11 @@ def sa_operation():
     elif operation == "setdiscount":
       return redirect(url_for('set_discount', operation = operation))
 
+    elif operation == "addcustomer":
+      return redirect(url_for('addcustomer', operation = operation ))
+      
     else:
-      return "Mapping not yet implemented"
+      return render_template('errorstatus.html', statusmessage =  " Select a button " , redirecturl = '/saoperation')
 
   elif request.method == 'GET':
     return render_template('SAproduct_operation.html', form = form)
@@ -186,6 +189,10 @@ def set_discount(operation):
       return render_template('errorstatus.html', statusmessage = form_validation + " for barcode" , redirecturl = '/productdiscount/setdiscount')
     form_validation = form.validateNumber(form.discount)
     if str(form_validation) == 'please enter only numbers':
+      return render_template('errorstatus.html', statusmessage = form_validation + " for barcpde" , redirecturl = '/productdiscount/setdiscount')
+
+    form_validation = form.validateNumber(form.discount)
+    if str(form_validation) == 'please enter only numbers':
       return render_template('errorstatus.html', statusmessage = form_validation + " for discount" , redirecturl = '/productdiscount/setdiscount')
 
     logicObject = Logic.Logic()
@@ -200,13 +207,15 @@ def set_discount(operation):
   #allproducts = logicObject.execute("viewproducts", None)
   #return render_template('fordiscountlistinginventory.html', allproducts = allproducts)
 
-@app.route('/displayall/<operation>', methods = ['POST','GET'])
-def view_all_products(operation):
+@app.route('/displayall/<int:page>', methods = ['POST','GET'])
+def view_all_products(page = 1):
   if 'email' not in session:
     return redirect(url_for('signin'))
 
+  storageObject = StorageClass()
   logicObject = Logic.Logic()
-  allproducts = logicObject.execute(operation, None)
+  #allproducts = logicObject.execute(operation, None)
+  allproducts = storageObject.get_products_from_db(page,POSTS_PER_PAGE)
   return render_template('listinginventory.html', allproducts = allproducts)
 
 
@@ -231,6 +240,13 @@ def addcustomer(operation):
   form = AddCustomer()
   if request.method ==  "POST": #and form.validate():
     #print "check"
+    form_validation = form.validateNotEmpty(form.customerId)
+    if str(form_validation) == 'Cannot give empty space':
+      return render_template('errorstatus.html', statusmessage = form_validation + " for customerid" , redirecturl = '/customer/addcustomer')
+    form_validation = form.validateNumber(form.customerId)
+    if str(form_validation) == 'please enter only 8 digit numbers':
+      return render_template('errorstatus.html', statusmessage = form_validation + " for customerid" , redirecturl = '/customer/addcustomer')
+
     logicObject = Logic.Logic()
     feedback = logicObject.execute(operation,form)
     return render_template('feedback.html', feedback = feedback)
@@ -262,7 +278,7 @@ def addcategory(operation):
 
   form = AddCategory()
   if request.method == "POST":
-  
+    
     logicObject = Logic.Logic()
     feedback = logicObject.execute(operation,form)
     return render_template('feedback.html',feedback = feedback)
@@ -633,8 +649,10 @@ def settings():
     if str(form_validation) == 'Cannot give empty space':
       return render_template('errorstatus.html', statusmessage = form_validation + " for time" , redirecturl = '/settings')
     form_validation = form.validateNumber(form.pricefreq)
-    if str(form_validation) == 'please enter only numbers':
+    if str(form_validation) == 'please enter only integers':
       return render_template('errorstatus.html', statusmessage = form_validation + " for time" , redirecturl = '/settings')
+    if int(form.pricefreq.data) == 0:
+      return render_template('errorstatus.html', statusmessage = "cannot enter 0 for time" , redirecturl = '/settings')
 
     fname = "activepricefrequncy.txt"
     f = open(fname,'w')

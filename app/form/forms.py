@@ -26,24 +26,35 @@ class RegisterShopForm(Form):
 class ShopAdminFunction(Form):
   operations = RadioField('operations', choices = [('searchBarcode','Search Barcode'),('viewproducts','View Product'),('submittransaction','Submit Transaction'),
   ('retrieveserverinformation','Retrieve Server Information'),('viewproducttransactions','View Transactions'),('adddisplaystock','Add Display Stock'),('requeststock','Request Stock'),('getprice','Get Price'),('viewpdubyid', 'Search PDU'),
-   ('addpricedisplayunit','Add price Display Unit'),('setdiscount','Set Discount') ])
+   ('addpricedisplayunit','Add price Display Unit'),('setdiscount','Set Discount'),('addcustomer','Add Customer') ])
 
   # for testing use this /product url
   """[('addproduct','Add product'),('editproduct','Edit Product'),('removeproduct','Remove Product'),
-  ('addcustomer','Add Customer'),('editcustomer','Edit Customer'),('removecustomer','Remove Customer'),('addstock', 'Add Stock'), 
+  ,('editcustomer','Edit Customer'),('removecustomer','Remove Customer'),('addstock', 'Add Stock'), 
   ('addmanufacturer','Add Manufacturer'),('addcategory','Add Category')])"""
 
 
 class AddCustomer(Form):
-  customername = TextField('customername', validators = [validators.Required(), validateNotEmpty])
-  customeraddress = TextAreaField('customeraddress', validators = [validators.Required(), validateNotEmpty ])
-  handphone = TextField('handphone', validators = [validators.Required(), validateNotEmpty, validateNumber])
+  #customername = TextField('customername', validators = [validators.Required(), validateNotEmpty])
+  #customeraddress = TextAreaField('customeraddress', validators = [validators.Required(), validateNotEmpty ])
+  #handphone = TextField('handphone', validators = [validators.Required(), validateNotEmpty, validateNumber])
   customerId = TextField('customerId', validators = [validators.Required(), validateNotEmpty]) 
-  dateofjoining = DateField('dateofjoining', validators = [validators.Required()])
+  #dateofjoining = DateField('dateofjoining', validators = [validators.Required()])
   email = TextField("Email")
   
   def __init__(self, *args, **kwargs):
    Form.__init__(self, *args, **kwargs)
+
+  def validateNotEmpty(self,field):
+    s = field.data
+    s = s.replace(' ','')
+    if len(s) == 0:
+      return 'Cannot give empty space'
+  
+  def validateNumber(form,field):
+    s = field.data
+    if re.match("^\d{8}$",s) is None:
+      return 'please enter only 8 digit numbers'
 
 class AddManufacturer(Form):
   manufacturerId = TextField('manufacturerId',validators = [validators.Required("Please enter manufacturer Id"), validateNotEmpty])

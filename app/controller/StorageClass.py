@@ -20,9 +20,9 @@ class StorageClass(object):
         self.storageFeedback = Feedback()
     
     def addCustomerTODatabase(self,formData):
-        newCustomerData = Customer(formData.customername.data,formData.customeraddress.data,
-                                   formData.handphone.data,formData.customerId.data,formData.dateofjoining.data,
-                                   formData.passwordcustomer.data)
+        newCustomerData = Customer("empty","empty",
+                                   000,formData.customerId.data,'2013-09-30',
+                                   formData.email.data)
     
         db.session.add(newCustomerData)
         try:
@@ -100,8 +100,8 @@ class StorageClass(object):
         existingCategories = Category.query.all()
         return existingCategories    
 
-    def get_products_from_db(self, formData):
-        existingProduct = Products.query.all()
+    def get_products_from_db(self,page,ppp):
+        existingProduct = Products.query.paginate(page,ppp,False)
         return existingProduct
 
     def get_stock_quantity_for_barcode(self, enteredBarcode):

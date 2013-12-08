@@ -18,7 +18,7 @@
 	</tr>
 </thead>
 <tbody>
-{% for productobj in allproducts %}
+{% for productobj in allproducts.items %}
 <tr>
 <td>{{ productobj.barcode }} </td>
 <td>{{ productobj.name }}  </td>
@@ -33,5 +33,7 @@
 </tr>
 {% endfor %}
 </tbody>
+{% if allproducts.has_prev %}<a href="{{ url_for('view_all_products', page = allproducts.prev_num) }}"><< Previous Page</a>{% else %}<< Previous Page{% endif %} | 
+{% if allproducts.has_next %}<a href="{{ url_for('view_all_products', page = allproducts.next_num) }}">Next Page>></a>{% else %}Next Page >>{% endif %}
 </table>
 {% endblock %}
